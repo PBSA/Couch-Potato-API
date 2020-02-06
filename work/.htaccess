@@ -1,0 +1,15 @@
+
+
+// Raw header
+Access-Control-Allow-Origin: *
+// How to send the response header with PHP
+header("Access-Control-Allow-Origin: *");
+// How to send the response header with Apache (.htaccess)
+Header set Access-Control-Allow-Origin "*"
+// How to send the response header with Nginx
+add_header 'Access-Control-Allow-Origin' '*';
+// How to send the response header with Express.js
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+});
