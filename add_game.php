@@ -96,16 +96,6 @@ $retval =  bos_Send($game);
 
 if($retval == 'success'){
 
-        /*/ if this API call is made from the client app then the local start time will need to be used for creating
-        // new events and games.
-        if($data['local_start_time'] != null){
-            $game->date = $data['local_start_date'];
-            $game->time = $data['local_start_time'];
-        }
-        else{
-            // adjust to local time
-        }*/
-
         // get the last event id
         $q = $con->query("SELECT MAX(id) as `id` FROM events WHERE `date` = '$game->date' AND `league` = '$game->league'");
         $row=mysqli_fetch_object($q);
@@ -113,8 +103,10 @@ if($retval == 'success'){
             $message->status = "Success"; 
         }
         else{
-            $message->message = "Failed to get last event id";
-            $message->status = "Error"; 
+            $message->status = "400";
+            $message->title = "Failed to get last event id";
+            $message->subcode = "471";
+            $message->message = "";
             echo json_encode($message); 
             return false;
         }
@@ -128,8 +120,10 @@ if($retval == 'success'){
                 $message->status = "Success"; 
             }
             else{
-                $message->status = "Error"; 
-                $message->message = "Failed to add new event";
+                $message->status = "400";
+                $message->title = "Failed to add new event";
+                $message->subcode = "472";
+                $message->message = "";
                 echo json_encode($message); 
             }
 
@@ -140,8 +134,10 @@ if($retval == 'success'){
                 $game->eventid = $row->id ;
             }
             else{
-                $message->status = "Error";
-                $message->message = "Failed to get new event id";
+                $message->status = "400";
+                $message->title = "Failed to add new event";
+                $message->subcode = "473";
+                $message->message = "";
                 echo json_encode($message); 
             }
         }
@@ -165,8 +161,10 @@ if($retval == 'success'){
         $message->status = "Success"; 
     }
     else{
-        $message->status = "Error"; 
-        $message->message = "Failed to add new game";
+        $message->status = "400";
+        $message->title = "Failed to add new game";
+        $message->subcode = "474";
+        $message->message = "";
         echo json_encode($message); 
         return false;
     } 
@@ -179,8 +177,10 @@ if($retval == 'success'){
         $message->status = "Success"; 
     }
     else{
-        $message->status = "Error"; 
-        $message->message = "Failed to get new game id";
+        $message->status = "400";
+        $message->title = "Failed to get new game id";
+        $message->subcode = "475";
+        $message->message = "";
         echo json_encode($message); 
         return false;
     } 
@@ -191,8 +191,10 @@ if($retval == 'success'){
         $message->status = "Success"; 
     }
     else{
-        $message->status = "Error";
-        $message->message = "Failed to update game progress";
+        $message->status = "400";
+        $message->title = "Failed to update game progress";
+        $message->subcode = "476";
+        $message->message = "";
         echo json_encode($message); 
         return false;
     }

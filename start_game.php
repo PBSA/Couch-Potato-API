@@ -35,8 +35,10 @@
             $message['status'] = "Success"; 
         }
         else{
-            $message['status'] = "Error";
-            $message['message'] = "Failed to update game progress";
+            $message->status = "400";
+            $message->title = "Failed to update game progress";
+            $message->subcode = "481";
+            $message->message = "";
             echo json_encode($message); 
             return false;
         }
