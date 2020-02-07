@@ -1,10 +1,11 @@
 <?php
     include "db.php"; 
     $league = $_GET['league'];
-    $date = $_GET['date'];
+    $start = $_GET['start'];
+    $end = $_GET['end'];
    
     $data=array(); 
-    $q = $con->query("SELECT * FROM vwgameevents WHERE league = '$league' AND date = '$date'");
+    $q = $con->query("SELECT * FROM vwgameevents WHERE league = '$league' AND datetime BETWEEN '$start' AND '$end'");
 
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 

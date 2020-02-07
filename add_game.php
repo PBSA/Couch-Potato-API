@@ -26,8 +26,15 @@ $game->call = 'create';
 $message = new stdClass;
 
 // ******************************************
-// *********** validate first ***************
+// *********** Validate first ***************
 // ******************************************
+
+// are all parameters sent
+$retval = validateAddGame($game);
+if($retval->status !=  $codes->success200){
+    echo json_encode($retval);
+    return false;
+}
 
 // is sport valid
 $retval = validateSport($game->sport);
@@ -89,12 +96,15 @@ $retval =  bos_Send($game);
 
 if($retval == 'success'){
 
-        // if this API call is made from the client app then the local start time will need to be used for creating
+        /*/ if this API call is made from the client app then the local start time will need to be used for creating
         // new events and games.
         if($data['local_start_time'] != null){
             $game->date = $data['local_start_date'];
             $game->time = $data['local_start_time'];
         }
+        else{
+            // adjust to local time
+        }*/
 
         // get the last event id
         $q = $con->query("SELECT MAX(id) as `id` FROM events WHERE `date` = '$game->date' AND `league` = '$game->league'");
@@ -146,7 +156,6 @@ if($retval == 'success'){
 
  function addGame($game){
      // adds a new game 
-   
     global $con;
     global $message;
 

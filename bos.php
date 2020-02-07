@@ -44,7 +44,7 @@ function bos_Send($game){
                 log_incident(json_decode($incident));
                 log_success($decoded, $witness);
                 $message->status = "200";
-                $message->title = "Game added";
+                $message->title = "Incident added";
                 $message->message = $decoded;
                 echo json_encode($message);
                 return 'success';

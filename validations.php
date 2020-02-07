@@ -5,8 +5,32 @@
     $data=array(); 
     $message = new stdClass;
     $codes = new stdClass;
-    $codes->error400 = "Error 400: Bad Request";
+    $paramList = array();
+    $codes->error400 = "400: Bad Request";
     $codes->success200 = "Success";
+
+    function validateAddGame($game){
+        global $message;
+        global $codes;
+        global $paramList;
+       
+        if($game->sport == null){$paramList[]="sport";}
+        if($game->league == null){$paramList[]="league";}
+        if($game->home == null){$paramList[]="home";}
+        if($game->away == null){$paramList[]="away";}
+        if($game->start_time == null){$paramList[]="start_time";}
+        if($game->user == null){$paramList[]="user";}
+
+        if($paramList != null){
+            $message->status = $codes->error400;
+            $message->subcode = "470";
+            $message->title = "Missing parameters" . json_encode($paramList);
+            $message->message = "Parameters are: sport, league, home, away, start_time, user, [optional] match_id" ;
+        }
+        else{ $message->status = $codes->success200;  }
+        return $message;
+    }
+
 
     function validateSport($sport){
         global $con;
@@ -24,9 +48,7 @@
             $message->title = "Invalid sport [" . $sport . "]";
             $message->message = "Try one of: " . json_encode($data);
         }
-        else{
-            $message->status = $codes->success200;  
-        }
+        else{ $message->status = $codes->success200;  }
         return $message;
     }
 
@@ -47,9 +69,7 @@
             $message->title = "Invalid league [" . $league . "]";
             $message->message = "Try one of: " . json_encode($data);
         }
-        else{
-            $message->status = $codes->success200; 
-        }
+        else{ $message->status = $codes->success200; }
         return $message;
     }
 
@@ -72,9 +92,7 @@
             $message->title = "Invalid " . $type . " [" . $team . "]";
             $message->message = "Try one of: " . json_encode($data);
         }
-        else{
-            $message->status = $codes->success200; 
-        }
+        else{ $message->status = $codes->success200; }
         return $message;
     }
 
@@ -101,9 +119,7 @@
             $message->title = "Invalid teams selection [" . $home . " v " . $away . "]";
             $message->message = "Teams must be different";
         }
-        else{
-            $message->status = $codes->success200; 
-        }
+        else{ $message->status = $codes->success200; }
         return $message;
     }
 
@@ -122,9 +138,7 @@
             $message->title = "Invalid user id [" . $user . "]";
             $message->message = "";
         }
-        else{
-            $message->status = $codes->success200; 
-        }
+        else{ $message->status = $codes->success200; }
         return $message;
     }
 ?>
