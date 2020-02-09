@@ -7,7 +7,6 @@ function bos_Send($game){
    include "logging.php";
 
    $witnesses = getWitnesses();
-
    $message = new stdClass;
 
   // send incident message to all BOS witnesses

@@ -24,8 +24,30 @@
         if($paramList != null){
             $message->status = $codes->error400;
             $message->subcode = "470";
-            $message->title = "Missing parameters" . json_encode($paramList);
+            $message->title = "Missing parameter(s)" . json_encode($paramList);
             $message->message = "Parameters are: sport, league, home, away, start_time, user, [optional] match_id" ;
+        }
+        else{ $message->status = $codes->success200;  }
+        return $message;
+    }
+
+    function validateStartGame($game){
+        global $message;
+        global $codes;
+        global $paramList;
+       
+        if($game->sport == null){$paramList[]="sport";}
+        if($game->league == null){$paramList[]="league";}
+        if($game->home == null){$paramList[]="home";}
+        if($game->away == null){$paramList[]="away";}
+        if($game->start_time == null){$paramList[]="start_time";}
+        if($game->whistle_start_time == null){$paramList[]="whistle_start_time";}
+
+        if($paramList != null){
+            $message->status = $codes->error400;
+            $message->subcode = "470";
+            $message->title = "Missing parameter(s)" . json_encode($paramList);
+            $message->message = "Parameters are: sport, league, home, away, start_time, whistle_start_time, [optional] match_id" ;
         }
         else{ $message->status = $codes->success200;  }
         return $message;
@@ -137,6 +159,21 @@
             $message->subcode = "466";
             $message->title = "Invalid user id [" . $user . "]";
             $message->message = "";
+        }
+        else{ $message->status = $codes->success200; }
+        return $message;
+    }
+
+    function validateStartAndWhistleStart($start_time, $whistle_start_time){
+        global $message;
+        global $codes;
+
+        // whistle start time must be after start time.
+        if($whistle_start_time < $start_time){
+            $message->status = $codes->error400;
+            $message->subcode = "481";
+            $message->title = "Whistle start time is before start time";
+            $message->message = "whistle_start_time must be equal to, or after, the start_time";
         }
         else{ $message->status = $codes->success200; }
         return $message;

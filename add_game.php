@@ -64,13 +64,6 @@ if($retval->status !=  $codes->success200){
     return false;
 }
 
-// are teams different
-$retval = validateBothTeams($game->home, $game->away);
-if($retval->status !=  $codes->success200){
-    echo json_encode($retval);
-    return false;
-}
-
 /* is start time valid
 $retval = validateDateTime($game->start_time);
 if($retval->status !=  $codes->success200){
@@ -78,13 +71,19 @@ if($retval->status !=  $codes->success200){
     return false;
 }*/
 
+// are teams different
+$retval = validateBothTeams($game->home, $game->away);
+if($retval->status !=  $codes->success200){
+    echo json_encode($retval);
+    return false;
+}
+
 // is user valid
 $retval = validateUser($game->user);
 if($retval->status !=  $codes->success200){
     echo json_encode($retval);
     return false;
 }
-
 
 // ********************************************
 // ** Done validating, now do some real work **

@@ -1,6 +1,7 @@
 <?php
         include "db.php";
         include "bos.php";
+        include "validations.php";
 
         header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
@@ -25,13 +26,6 @@
         // *********** validate first ***************
         // ******************************************
 
-        // make sure sport is valid
-
-        // make sure league is valid
-
-        // make sure both teams are valid
-
-        // make sure teams are not the same
 
         // score can only be added if status is 'In Progress' (1)
 
@@ -48,6 +42,10 @@
             else{
                 $message['status'] = "Error";
                 $message['message'] = "Failed to add score";
+                $message->status = "400";
+            $message->title = "Failed to update game progress";
+            $message->subcode = "481";
+            $message->message = "";
                 echo json_encode($message);        
             }
         }
