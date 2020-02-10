@@ -6,7 +6,7 @@
     $message = new stdClass;
     $codes = new stdClass;
     $paramList = array();
-    $codes->error400 = "400: Bad Request";
+    $codes->error400 = "400";
     $codes->success200 = "Success";
 
     function validateAddGame($game){
@@ -45,7 +45,7 @@
 
         if($paramList != null){
             $message->status = $codes->error400;
-            $message->subcode = "470";
+            $message->subcode = "480";
             $message->title = "Missing parameter(s)" . json_encode($paramList);
             $message->message = "Parameters are: sport, league, home, away, start_time, whistle_start_time, [optional] match_id" ;
         }
@@ -53,6 +53,28 @@
         return $message;
     }
 
+    function validateAddScore($game){
+        global $message;
+        global $codes;
+        global $paramList;
+       
+        if($game->sport == null){$paramList[]="sport";}
+        if($game->league == null){$paramList[]="league";}
+        if($game->home == null){$paramList[]="home";}
+        if($game->away == null){$paramList[]="away";}
+        if($game->start_time == null){$paramList[]="start_time";}
+        if($game->home_score == null){$paramList[]="home_score";}
+        if($game->away_score == null){$paramList[]="away_score";}
+        
+        if($paramList != null){
+            $message->status = $codes->error400;
+            $message->subcode = "485";
+            $message->title = "Missing parameter(s)" . json_encode($paramList);
+            $message->message = "Parameters are: sport, league, home, away, start_time, home_score, away_score, [optional] match_id" ;
+        }
+        else{ $message->status = $codes->success200;  }
+        return $message;
+    }
 
     function validateSport($sport){
         global $con;
@@ -73,7 +95,6 @@
         else{ $message->status = $codes->success200;  }
         return $message;
     }
-
 
     function validateLeague($sport, $league){
         global $con;
@@ -174,6 +195,21 @@
             $message->subcode = "481";
             $message->title = "Whistle start time is before start time";
             $message->message = "whistle_start_time must be equal to, or after, the start_time";
+        }
+        else{ $message->status = $codes->success200; }
+        return $message;
+    }
+
+    function validateWhistleStartAndWhistleEnd($start_time, $whistle_start_time){
+        global $message;
+        global $codes;
+
+        // whistle start time must be after start time.
+        if($whistle_start_time < $start_time){
+            $message->status = $codes->error400;
+            $message->subcode = "481";
+            $message->title = "Whistle end time is before whistle start time";
+            $message->message = "whistle_end_time must be equal to, or after, the whistle_start_time";
         }
         else{ $message->status = $codes->success200; }
         return $message;

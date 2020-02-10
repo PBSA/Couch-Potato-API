@@ -20,19 +20,58 @@
         $game->whistle_end_time = $data['whistle_end_time'];
         $game->match_id  = $data['match_id'];       
 
-        // ******************************************
-        // *********** validate first ***************
-        // ******************************************
-
-        // make sure sport is valid
-
-        // make sure league is valid
-
-        // make sure both teams are valid
-
-        // make sure teams are not the same
 
         // game can only be finished if score has been added
+
+        // ******************************************
+    // *********** Validate first ***************
+    // ******************************************
+   
+    // are all parameters sent
+    $retval = validateStartGame($game); 
+    if($retval->status !=  $codes->success200){ 
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is sport valid
+    $retval = validateSport($game->sport);
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is league valid
+    $retval = validateLeague($game->sport, $game->league);
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is home team valid
+    $retval = validateTeam($game->league, $game->home, 'home team');
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is away team valid
+    $retval = validateTeam($game->league, $game->away, 'away team');
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+   
+    
+    $retval = validateWhistleStartAndWhistleEnd($game->whistle_start_time, $game->whistle_end_time);
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+
+    // ********************************************
+    // ** Done validating, now do some real work **
+    // ********************************************
 
          // send BOS incident
          $retval = bos_Send($game);
@@ -44,9 +83,12 @@
                 $message['status'] = "Success";      
             }
             else{
-                $message['status'] = "Error";
-                $message['message'] = "Failed to update score";
+                $message->status = "400";
+                $message->title = "Failed to update game progress";
+                $message->subcode = "493";
+                $message->message = "";
                 echo json_encode($message); 
+                return false;
             }
         }
         else{echo json_encode($retval);}

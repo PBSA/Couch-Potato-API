@@ -93,21 +93,21 @@ if($retval->status !=  $codes->success200){
 // send new game to BOS
 $retval =  bos_Send($game);   
 
-if($retval == 'success'){
-
+if($retval->status == "200" ){
+        
         // get the last event id
         $q = $con->query("SELECT MAX(id) as `id` FROM events WHERE `date` = '$game->date' AND `league` = '$game->league'");
         $row=mysqli_fetch_object($q);
         if($q){
-            $message->status = "Success"; 
+          
         }
         else{
             $message->status = "400";
             $message->title = "Failed to get last event id";
             $message->subcode = "471";
             $message->message = "";
-            echo json_encode($message); 
-            return false;
+            //echo json_encode($message); 
+            return $message;
         }
 
         // if this is the first game then a new event has to be created as well
@@ -116,14 +116,15 @@ if($retval == 'success'){
             $q = mysqli_query($con, "INSERT INTO `events` ( `user`, `league`, `date` ) 
                                         VALUES ('$game->user', '$game->league', '$game->date')"); 
             if($q){
-                $message->status = "Success"; 
+                
             }
             else{
                 $message->status = "400";
                 $message->title = "Failed to add new event";
                 $message->subcode = "472";
                 $message->message = "";
-                echo json_encode($message); 
+                //echo json_encode($message); 
+                return $message;
             }
 
             // get the new event id
@@ -137,15 +138,22 @@ if($retval == 'success'){
                 $message->title = "Failed to add new event";
                 $message->subcode = "473";
                 $message->message = "";
-                echo json_encode($message); 
+                //echo json_encode($message); 
+                return $message;
             }
         }
-        else{$game->eventid = $row->id;}
+        else{
+            $game->eventid = $row->id;
+        }
         // add game
-        addGame($game);
+        $retval = addGame($game);
+        echo json_encode($retval);
+        return $retval;
+        
     }
     else{
-        //echo json_encode($retval);
+        echo json_encode($retval);
+        return $message;
     }
 
 
@@ -157,15 +165,15 @@ if($retval == 'success'){
     $q = mysqli_query($con, "INSERT INTO `games` ( `user`, `event`, `hometeam`,`awayteam`,`starttime` ) 
                                 VALUES ('$game->user', '$game->eventid', '$game->home', '$game->away', '$game->time')"); 
     if($q){
-        $message->status = "Success"; 
+       
     }
     else{
         $message->status = "400";
         $message->title = "Failed to add new game";
         $message->subcode = "474";
         $message->message = "";
-        echo json_encode($message); 
-        return false;
+        //echo json_encode($message); 
+        return $message;
     } 
     
     // get the last id
@@ -173,31 +181,36 @@ if($retval == 'success'){
     $row=mysqli_fetch_object($q);
     if($q){
         $game->id = $row->id;
-        $message->status = "Success"; 
+       
     }
     else{
         $message->status = "400";
         $message->title = "Failed to get new game id";
         $message->subcode = "475";
         $message->message = "";
-        echo json_encode($message); 
-        return false;
+        //echo json_encode($message); 
+        return $message;
     } 
     
     // insert the game progress. Set to 'Not Started'
     $q = mysqli_query($con, "INSERT INTO `progress` (`status`,`game`) VALUES ('0','$game->id')"); 
     if($q){
-        $message->status = "Success"; 
+        
     }
     else{
         $message->status = "400";
         $message->title = "Failed to update game progress";
         $message->subcode = "476";
         $message->message = "";
-        echo json_encode($message); 
-        return false;
+        //echo json_encode($message); 
+        return $message;
     }
     $game->matchid = $game->id;
+    $message->status = "200";
+    $message->title = "Game added";
+    $message->message = $game->home . " v " . $game->away . " - " . $game->start_time;
+    //echo json_encode($message); 
+    return $message;
 }
 
 ?>

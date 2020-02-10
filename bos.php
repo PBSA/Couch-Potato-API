@@ -7,13 +7,13 @@ function bos_Send($game){
    include "logging.php";
 
    $witnesses = getWitnesses();
+
    $message = new stdClass;
 
   // send incident message to all BOS witnesses
   foreach($witnesses as $witness) {
     $curl = curl_init(trim($witness));
     $incident = json_encode(make_incident($game),JSON_UNESCAPED_SLASHES);
-    //echo json_encode($incident);
     $headers = ['Content-Type: application/json'];
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $incident);
@@ -43,10 +43,10 @@ function bos_Send($game){
                 log_incident(json_decode($incident));
                 log_success($decoded, $witness);
                 $message->status = "200";
-                $message->title = "Incident added";
+                $message->title = "Incident sent";
                 $message->message = $decoded;
-                echo json_encode($message);
-                return 'success';
+                //echo json_encode($message);
+                return $message;
             }
         }
     }  

@@ -26,10 +26,43 @@
         // *********** validate first ***************
         // ******************************************
 
-
         // score can only be added if status is 'In Progress' (1)
 
-
+        // are all parameters sent
+        $retval = validateAddScore($game); 
+        if($retval->status !=  $codes->success200){ 
+            echo json_encode($retval);
+            return false;
+        }
+        
+        // is sport valid
+        $retval = validateSport($game->sport);
+        if($retval->status !=  $codes->success200){
+            echo json_encode($retval);
+            return false;
+        }
+        
+        // is league valid
+        $retval = validateLeague($game->sport, $game->league);
+        if($retval->status !=  $codes->success200){
+            echo json_encode($retval);
+            return false;
+        }
+        
+        // is home team valid
+        $retval = validateTeam($game->league, $game->home, 'home team');
+        if($retval->status !=  $codes->success200){
+            echo json_encode($retval);
+            return false;
+        }
+        
+        // is away team valid
+        $retval = validateTeam($game->league, $game->away, 'away team');
+        if($retval->status !=  $codes->success200){
+            echo json_encode($retval);
+            return false;
+        }
+  
          // send BOS incident
          $retval = bos_Send($game);
          if($retval == 'success'){
@@ -43,11 +76,10 @@
                 $message['status'] = "Error";
                 $message['message'] = "Failed to add score";
                 $message->status = "400";
-            $message->title = "Failed to update game progress";
-            $message->subcode = "481";
-            $message->message = "";
-                echo json_encode($message);        
-            }
+                $message->subcode = "487";
+                echo json_encode($message);
+            }           
+            
         }
         else{echo json_encode($retval);}
 ?>
