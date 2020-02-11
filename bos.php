@@ -2,17 +2,18 @@
 function bos_Send($game){
     // send a create incident to BOS
    
-   include "get_witnesses.php";
    include "incidents.php";
    include "logging.php";
+   include "get_config.php";
 
-   $witnesses = getWitnesses();
-
+   $witnesses = $config->subscriptions->witnesses;
    $message = new stdClass;
-
+  
   // send incident message to all BOS witnesses
   foreach($witnesses as $witness) {
-    $curl = curl_init(trim($witness));
+   
+    $curl = curl_init(trim($witness->url));
+    
     $incident = json_encode(make_incident($game),JSON_UNESCAPED_SLASHES);
     $headers = ['Content-Type: application/json'];
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -32,6 +33,7 @@ function bos_Send($game){
             curl_close($curl);
             $decoded = json_decode($curl_response);
             if($decoded == null){
+               
                 $message->status = "400";
                 $message->title = $curl_response;
                 if($message->title == "Not normalized incident"){$message->subcode = "450";}
@@ -40,12 +42,15 @@ function bos_Send($game){
                 echo json_encode($message);
                 return $message;
             }
-            else{    
+            else{   
+                
                 log_incident(json_decode($incident));
-                log_success($decoded, $witness);
+                log_success($decoded, $witness-url);
+               
                 $message->status = "200";
                 $message->title = "Incident sent";
                 $message->message = $decoded;
+                
                 return $message;
             }
         }

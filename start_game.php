@@ -68,16 +68,7 @@
         return false;
     }
 
-
-   /* 
-    //is start time valid
-    $retval = validateDateTime($game->start_time);
-    if($retval->status !=  $codes->success200){
-        echo json_encode($retval);
-        return false;
-    }
-
-   $retval = validateStartAndWhistleStart($game->start_time, $game->whistle_start_time);
+   /*$retval = validateStartAndWhistleStart($game->start_time, $game->whistle_start_time);
     if($retval->status !=  $codes->success200){
         echo json_encode($retval);
         return false;

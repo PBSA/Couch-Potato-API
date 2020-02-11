@@ -133,7 +133,7 @@ if($retval->status == "200" ){
             }
             else{
                 $message->status = "400";
-                $message->title = "Failed to add new event";
+                $message->title = "Failed to get new event id";
                 $message->subcode = "473";
                 $message->message = "";
                 echo json_encode($message); 

@@ -25,7 +25,7 @@
             $message->status = $codes->error400;
             $message->subcode = "470";
             $message->title = "Missing parameter(s)" . json_encode($paramList);
-            $message->message = "Parameters are: sport, league, home, away, start_time, user, [optional] match_id" ;
+            $message->message = "Parameters are: sport, league, home, away, start_time, user" ;
         }
         else{ $message->status = $codes->success200;  }
         return $message;

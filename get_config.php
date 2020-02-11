@@ -1,9 +1,14 @@
 <?php
-    // load config-dataproxy.yaml
+    // load config-dataproxy.json
+
+    $config = array();
+
+    $string = file_get_contents("work/config-dataproxy.json");
+    if ($string == false) {
+        // deal with error...
     
-    $data=array();
-    // read in file as is, don't bother converting from YAML
-    $myfile = fopen("work/config-dataproxy.yaml", "r") or die("Unable to open file!");
-    echo(fread($myfile,filesize("work/config-dataproxy.yaml")));
-    fclose($myfile);
+    }
+    $config = json_decode($string);
+    //echo json_encode($config);
+
 ?>

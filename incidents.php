@@ -1,5 +1,7 @@
 <?php
 
+    include "get_config.php";
+
     function make_incident($game){
         $timestamp = gmdate("Y-m-d") . 'T' . gmdate("H:i:s") . '.000Z';        
         $unique_string = unique_string($game->start_time, $game);      
@@ -33,7 +35,9 @@
 
         $provider_info = new stdClass();
         $provider_info->match_id = $game->match_id;
-        $provider_info->name = 'couch-potato';
+        
+        //$provider_info->name = $config->providers->name;
+        $provider_info->name = 'carrot';
         $provider_info->source = 'direct string input';
         $provider_info->source_file = '';
         $provider_info->pushed = $timestamp;
