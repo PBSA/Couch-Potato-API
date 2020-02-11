@@ -1,6 +1,7 @@
 <?php
         include "db.php";
         include "bos.php";
+        include "validations.php";
 
         header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
@@ -18,17 +19,19 @@
         $game->away = $data['away'];
         $game->start_time = $data['start_time'];
         $game->whistle_end_time = $data['whistle_end_time'];
-        $game->match_id  = $data['match_id'];       
+        $game->match_id  = $data['match_id']; 
+        
+        $message = new stdClass;
 
 
         // game can only be finished if score has been added
 
-        // ******************************************
+    // ******************************************
     // *********** Validate first ***************
     // ******************************************
    
     // are all parameters sent
-    $retval = validateStartGame($game); 
+    $retval = validateFinishGame($game); 
     if($retval->status !=  $codes->success200){ 
         echo json_encode($retval);
         return false;
@@ -75,22 +78,39 @@
 
          // send BOS incident
          $retval = bos_Send($game);
+        
 
-         if($retval == 'success'){
-            // update progress status. Set to 'Finished'
-            $q = mysqli_query($con, "UPDATE `progress` SET  `status` = '4' WHERE `game` = '$game->match_id'");  
+         if($retval->status == '200'){
+            // update whistle_start_time
+            $q = mysqli_query($con, "UPDATE `games` SET `whistle_start_time` = '$game->whistle_start_time' WHERE `id` = '$game->match_id'");  
             if($q){
-                $message['status'] = "Success";      
+                $message->status = "200";
+                $message->title = "Game finished";
+                $message->message = $game->home . " v " . $game->away. " - [whistle_end_time]" . $game->whistle_end_time;
             }
             else{
+                $message->status = "400";
+                $message->title = "Failed to update whistle start time";
+                $message->subcode = "492";
+                $message->message = "";
+                echo json_encode($message); 
+                return $message;
+            }
+
+            // update progress status. Set to 'Finished'
+            $q = mysqli_query($con, "UPDATE `progress` SET  `status` = '4' WHERE `game` = '$game->match_id'");  
+            if(!$q){
                 $message->status = "400";
                 $message->title = "Failed to update game progress";
                 $message->subcode = "493";
                 $message->message = "";
-                echo json_encode($message); 
-                return false;
             }
+            echo json_encode($message); 
+            return $message;
         }
-        else{echo json_encode($retval);}
+        else{
+            //echo json_encode($retval);
+            return $retval;
+        }
 
 ?>

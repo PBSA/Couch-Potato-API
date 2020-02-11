@@ -2,6 +2,7 @@
 <?php
     include "db.php";
     include "bos.php";
+    include "validations.php";
 
     header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
     header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
@@ -22,20 +23,69 @@
 
     // can only cancel games that are 'Not Started' or 'In Progress'
 
+    // ******************************************
+    // *********** Validate first ***************
+    // ******************************************
+   
+    // are all parameters sent
+    $retval = validateCancelGame($game); 
+    if($retval->status !=  $codes->success200){ 
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is sport valid
+    $retval = validateSport($game->sport);
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is league valid
+    $retval = validateLeague($game->sport, $game->league);
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is home team valid
+    $retval = validateTeam($game->league, $game->home, 'home team');
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+    
+    // is away team valid
+    $retval = validateTeam($game->league, $game->away, 'away team');
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    }
+
     // send BOS incident
     $retval = bos_Send($game);
 
-    if($retval == 'success'){
+    if($retval->status == '200'){
         // update progress status. Set to 'Canceled'
         $q = mysqli_query($con, "UPDATE `progress` SET  `status` = '2' WHERE `game` = $game->match_id");  
         if($q){
-            $message['status'] = "Success";      
+           $message->status = "200";
+            $message->title = "Game canceled";
+            $message->message = $game->home . " v " . $game->away;
+            
         }
         else{
-            $message['status'] = "Error";
-            $message['message'] = "Failed to update score";
-            echo json_encode($message); 
+            $message->status = "400";
+            $message->title = "Failed to update game progress";
+            $message->subcode = "496";
+            $message->message = "";
+           
         }
+        echo json_encode($message); 
+        return $message;
     }
-    else{echo json_encode($retval);}
+    else{
+        //echo json_encode($retval);
+        return $retval;
+    }
 ?>

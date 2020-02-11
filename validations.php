@@ -42,12 +42,13 @@
         if($game->away == null){$paramList[]="away";}
         if($game->start_time == null){$paramList[]="start_time";}
         if($game->whistle_start_time == null){$paramList[]="whistle_start_time";}
+        if($game->match_id == null){$paramList[]="match_id";}
 
         if($paramList != null){
             $message->status = $codes->error400;
             $message->subcode = "480";
             $message->title = "Missing parameter(s)" . json_encode($paramList);
-            $message->message = "Parameters are: sport, league, home, away, start_time, whistle_start_time, [optional] match_id" ;
+            $message->message = "Parameters are: sport, league, home, away, start_time, whistle_start_time,match_id" ;
         }
         else{ $message->status = $codes->success200;  }
         return $message;
@@ -65,12 +66,58 @@
         if($game->start_time == null){$paramList[]="start_time";}
         if($game->home_score == null){$paramList[]="home_score";}
         if($game->away_score == null){$paramList[]="away_score";}
+        if($game->match_id == null){$paramList[]="match_id";}
         
         if($paramList != null){
             $message->status = $codes->error400;
             $message->subcode = "485";
             $message->title = "Missing parameter(s)" . json_encode($paramList);
-            $message->message = "Parameters are: sport, league, home, away, start_time, home_score, away_score, [optional] match_id" ;
+            $message->message = "Parameters are: sport, league, home, away, start_time, home_score, away_score, match_id" ;
+        }
+        else{ $message->status = $codes->success200;  }
+        return $message;
+    }
+
+    function validateFinishGame($game){
+        global $message;
+        global $codes;
+        global $paramList;
+       
+        if($game->sport == null){$paramList[]="sport";}
+        if($game->league == null){$paramList[]="league";}
+        if($game->home == null){$paramList[]="home";}
+        if($game->away == null){$paramList[]="away";}
+        if($game->start_time == null){$paramList[]="start_time";}
+        if($game->whistle_end_time == null){$paramList[]="whistle_end_time";}
+        if($game->match_id == null){$paramList[]="match_id";}
+
+        if($paramList != null){
+            $message->status = $codes->error400;
+            $message->subcode = "490";
+            $message->title = "Missing parameter(s)" . json_encode($paramList);
+            $message->message = "Parameters are: sport, league, home, away, start_time, whistle_end_time,match_id" ;
+        }
+        else{ $message->status = $codes->success200;  }
+        return $message;
+    }
+
+    function validateCancelGame($game){
+        global $message;
+        global $codes;
+        global $paramList;
+       
+        if($game->sport == null){$paramList[]="sport";}
+        if($game->league == null){$paramList[]="league";}
+        if($game->home == null){$paramList[]="home";}
+        if($game->away == null){$paramList[]="away";}
+        if($game->start_time == null){$paramList[]="start_time";}
+        if($game->match_id == null){$paramList[]="match_id";}
+
+        if($paramList != null){
+            $message->status = $codes->error400;
+            $message->subcode = "495";
+            $message->title = "Missing parameter(s)" . json_encode($paramList);
+            $message->message = "Parameters are: sport, league, home, away, start_time, whistle_end_time, match_id" ;
         }
         else{ $message->status = $codes->success200;  }
         return $message;
@@ -142,13 +189,7 @@
     function validateDateTime($datetime){
         global $message;
         global $codes;
-/*
-            $message->status = $codes->error400;
-            $message->subcode = "464";
-            $message->title = "Invalid DateTime" . " [" . $datetime . "]";
-            $message->message = "Format should be [YYYY-MM-DDTHH:MM:SS.000Z";
-        
-        return $message; */
+
     }
 
     function validateBothTeams($home, $away){

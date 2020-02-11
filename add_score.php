@@ -22,6 +22,8 @@
         $game->away_score = $data['away_score'];
         $game->call = 'result';
 
+        $message = new stdClass;
+
         // ******************************************
         // *********** validate first ***************
         // ******************************************
@@ -65,21 +67,27 @@
   
          // send BOS incident
          $retval = bos_Send($game);
-         if($retval == 'success'){
-            // update the score
-            $q = mysqli_query($con, "UPDATE `games` SET  `homescore` = '$game->home_score',`awayscore` = '$game->away_score' 
-                                        WHERE `id` = '$game->match_id'"); 
-            if($q){
-                $message['status'] = "Success"; 
-            }
-            else{
-                $message['status'] = "Error";
-                $message['message'] = "Failed to add score";
-                $message->status = "400";
-                $message->subcode = "487";
+
+         if($retval->status == '200'){
+                // update the score
+                $q = mysqli_query($con, "UPDATE `games` SET  `homescore` = '$game->home_score',`awayscore` = '$game->away_score' 
+                                            WHERE `id` = '$game->match_id'"); 
+                if($q){
+                    $message->status = "200";
+                    $message->title = "Scores added";
+                    $message->message = $game->home . " " . $game->home_score . " v " . $game->away . " " . $game->away_score;   
+                }
+                else{
+                    $message->status = "400";
+                    $message->subcode = "487";
+                    $message->title = "Failed to add score";
+                    $message->message = "";
+                } 
                 echo json_encode($message);
-            }           
-            
+                return $message;          
         }
-        else{echo json_encode($retval);}
+        else{
+            //echo json_encode($retval);
+            return $retval;
+        }
 ?>

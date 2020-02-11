@@ -106,7 +106,7 @@ if($retval->status == "200" ){
             $message->title = "Failed to get last event id";
             $message->subcode = "471";
             $message->message = "";
-            //echo json_encode($message); 
+            echo json_encode($message); 
             return $message;
         }
 
@@ -115,15 +115,13 @@ if($retval->status == "200" ){
             // first game so add new event
             $q = mysqli_query($con, "INSERT INTO `events` ( `user`, `league`, `date` ) 
                                         VALUES ('$game->user', '$game->league', '$game->date')"); 
-            if($q){
-                
-            }
-            else{
+            
+            if(!$q){
                 $message->status = "400";
                 $message->title = "Failed to add new event";
                 $message->subcode = "472";
                 $message->message = "";
-                //echo json_encode($message); 
+                echo json_encode($message); 
                 return $message;
             }
 
@@ -138,7 +136,22 @@ if($retval->status == "200" ){
                 $message->title = "Failed to add new event";
                 $message->subcode = "473";
                 $message->message = "";
-                //echo json_encode($message); 
+                echo json_encode($message); 
+                return $message;
+            }
+
+             // get the new event id
+            $q = $con->query("SELECT MAX(id) as `id` FROM events");
+            $row=mysqli_fetch_object($q);
+            if($q){
+                $game->eventid = $row->id ;
+            }
+            else{
+                $message->status = "400";
+                $message->title = "Failed to add new event";
+                $message->subcode = "473";
+                $message->message = "";
+                echo json_encode($message); 
                 return $message;
             }
         }
@@ -152,7 +165,7 @@ if($retval->status == "200" ){
         
     }
     else{
-        echo json_encode($retval);
+        //echo json_encode($retval);
         return $message;
     }
 
@@ -164,15 +177,12 @@ if($retval->status == "200" ){
 
     $q = mysqli_query($con, "INSERT INTO `games` ( `user`, `event`, `hometeam`,`awayteam`,`starttime` ) 
                                 VALUES ('$game->user', '$game->eventid', '$game->home', '$game->away', '$game->time')"); 
-    if($q){
-       
-    }
-    else{
+    
+    if(!$q){
         $message->status = "400";
         $message->title = "Failed to add new game";
         $message->subcode = "474";
         $message->message = "";
-        //echo json_encode($message); 
         return $message;
     } 
     
@@ -180,36 +190,45 @@ if($retval->status == "200" ){
     $q = $con->query("SELECT MAX(id) as `id` FROM `games`");
     $row=mysqli_fetch_object($q);
     if($q){
-        $game->id = $row->id;
-       
+        $game->id = $row->id;   
     }
     else{
         $message->status = "400";
         $message->title = "Failed to get new game id";
         $message->subcode = "475";
         $message->message = "";
-        //echo json_encode($message); 
         return $message;
     } 
-    
+   
     // insert the game progress. Set to 'Not Started'
-    $q = mysqli_query($con, "INSERT INTO `progress` (`status`,`game`) VALUES ('0','$game->id')"); 
-    if($q){
-        
+    // if this is the very record then need to do an Insert
+    $q = $con->query("SELECT `status` FROM `progress` WHERE `game` = '$game->id'");  
+    $row=mysqli_fetch_object($q);
+    if($row != null)
+    {   //update
+        $q = mysqli_query($con, "UPDATE `progress` SET `status` = '0' WHERE `game` = '$game->id'"); 
+        if(!$q){
+            $message->status = "400";
+            $message->title = "Failed to update game progress";
+            $message->subcode = "476";
+            $message->message = "";
+            return $message;
+        } 
     }
-    else{
-        $message->status = "400";
-        $message->title = "Failed to update game progress";
-        $message->subcode = "476";
-        $message->message = "";
-        //echo json_encode($message); 
-        return $message;
-    }
+    else{ //insert
+        $q = mysqli_query($con, "INSERT INTO `progress` (`game`, `status`) VALUES ('$game->id', '0')"); 
+        if(!$q){
+            $message->status = "400";
+            $message->title = "Failed to insert game progress";
+            $message->subcode = "476";
+            $message->message = "";
+            return $message;
+        } 
+    } 
     $game->matchid = $game->id;
     $message->status = "200";
     $message->title = "Game added";
     $message->message = $game->home . " v " . $game->away . " - " . $game->start_time;
-    //echo json_encode($message); 
     return $message;
 }
 

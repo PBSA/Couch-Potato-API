@@ -38,6 +38,7 @@ function bos_Send($game){
                 if($message->title == "Invalid data format"){$message->subcode = "451";}
                 $message->message = $incident;
                 echo json_encode($message);
+                return $message;
             }
             else{    
                 log_incident(json_decode($incident));
@@ -45,7 +46,6 @@ function bos_Send($game){
                 $message->status = "200";
                 $message->title = "Incident sent";
                 $message->message = $decoded;
-                //echo json_encode($message);
                 return $message;
             }
         }

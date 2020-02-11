@@ -45,8 +45,6 @@
         echo json_encode($retval);
         return false;
     }
-
-
     
     // is league valid
     
@@ -92,11 +90,10 @@
     
      // send BOS incident
      $retval = bos_Send($game);
-     
  
      if($retval->status == "200"){
-                // update progress status. Set to 'In Progress'
-                $q = mysqli_query($con, "UPDATE `progress` SET `status` = '1' WHERE `game` = '$game->match_id'");  
+                // update whistle_start_time
+                $q = mysqli_query($con, "UPDATE `games` SET `whistle_start_time` = '$game->whistle_start_time' WHERE `id` = '$game->match_id'");  
                 if($q){
                     $message->status = "200";
                     $message->title = "Game started";
@@ -104,16 +101,27 @@
                 }
                 else{
                     $message->status = "400";
-                    $message->title = "Failed to update game progress";
+                    $message->title = "Failed to update whistle start time";
                     $message->subcode = "482";
+                    $message->message = "";
+                    echo json_encode($message); 
+                    return $message;
+                }
+
+                // update progress status. Set to 'In Progress'
+                $q = mysqli_query($con, "UPDATE `progress` SET `status` = '1' WHERE `game` = '$game->match_id'");  
+                if(!$q){
+                    $message->status = "400";
+                    $message->title = "Failed to update game progress";
+                    $message->subcode = "483";
                     $message->message = "";
                 }
                 echo json_encode($message); 
                 return $message;
     }
     else{
-            echo json_encode($retval);
-            return $retval;
+        //echo json_encode($retval);
+        return $retval;
     }
        
 ?>
