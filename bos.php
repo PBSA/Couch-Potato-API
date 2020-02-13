@@ -14,7 +14,7 @@ function bos_Send($game){
    
     $curl = curl_init(trim($witness->url));
     
-    $incident = json_encode(make_incident($game),JSON_UNESCAPED_SLASHES);
+    $incident = json_encode(make_incident($game, $config),JSON_UNESCAPED_SLASHES);
     $headers = ['Content-Type: application/json'];
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $incident);

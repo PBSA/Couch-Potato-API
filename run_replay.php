@@ -1,5 +1,8 @@
 <?php
+
 include "db.php"; 
+include "get_config.php";
+include "logging.php";
 
 $sport = $_GET['sport'];
 $leagues = $_GET['leagues'];
@@ -15,7 +18,7 @@ $info;
 // ******************************************
 
 // get witnesses
-$witnesses =  witness_list();
+$witnesses = $config->subscriptions->witnesses;
 
 // parse list of leagues and add quotes. Uses pipe seperator as comma screws with the URL
 $str_arr = explode ("|", $leagues);  
@@ -41,24 +44,8 @@ foreach ($str_arr as $league)  {
         $info = 'Incidents failed to send to all witness nodes - see error log';  
     }
     else($info = 'Success');
+    echo json_encode($sport .': {' . rtrim($output,', ') . '} info: ' . $info);
 
-echo json_encode($sport .': {' . rtrim($output,', ') . '} info: ' . $info);
-
-function witness_list(){
-   // get config info for witness url list, read one line at a time
-    $winesses=array();
-    $file = fopen("work/config-dataproxy.yaml", "r") or die("Unable to open file!");
-    while(! feof($file))
-    {
-      // only interested in lines with 'url:'
-    $line =  fgets($file);
-    if(strpos($line,'url:')){
-            $witnesses[]= str_replace(' - url: ','',$line);
-        }
-    }
-    fclose($file);
-    return $witnesses;
-}
 
 function send_message($incident){
     global $witnesses;
@@ -66,7 +53,7 @@ function send_message($incident){
     // send incident message to BOS witnesses
     foreach($witnesses as $witness) {
         
-        $curl = curl_init(trim($witness)); // one witness for now
+        $curl = curl_init(trim($witness->url)); // one witness for now
         $headers = [
             'Content-Type: application/json'
         ];
@@ -98,20 +85,6 @@ function send_message($incident){
         return true;
 }
 
-function log_success($msg, $url){
-  global $con;
-  $message = json_encode($msg->message);
-  $q = mysqli_query($con,  "INSERT INTO `httplog` ( `type`,`uniqueid`,`approveid`, `message`, `url` ) 
-                                VALUES ('success', '$msg->id', '$msg->id_approve', '$message', '$url')");             
-}
-
-function log_error(){
-    global $con;
-    $errormessage = json_encode($msg->message);
-    $q = mysqli_query($con,  "INSERT INTO `replay_error_log` ( `url`,`message`,`incident` ) 
-                                VALUES ('$url','$message', '$incident')");
-}
-
 function make_incident($game){
     // make a create incident message
 
@@ -136,7 +109,7 @@ function make_incident($game){
 
     $provider_info = new stdClass();
     $provider_info->match_id = $game['gameid'];
-    $provider_info->name = 'carrot';
+    $provider_info->name = $config->providers->name;
     $provider_info->source = 'direct string input';
     $provider_info->source_file = '';
     $provider_info->pushed = $timestamp;
