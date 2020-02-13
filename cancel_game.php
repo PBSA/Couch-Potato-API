@@ -64,7 +64,6 @@
 
     // send BOS incident
     $retval = bos_Send($game);
-
     if($retval->status == '200'){
         // update progress status. Set to 'Canceled'
         $q = mysqli_query($con, "UPDATE `progress` SET  `status` = '2' WHERE `game` = $game->match_id");  
@@ -72,20 +71,17 @@
            $message->status = "200";
             $message->title = "Game canceled";
             $message->message = $game->home . " v " . $game->away;
-            
         }
         else{
             $message->status = "400";
             $message->title = "Failed to update game progress";
             $message->subcode = "496";
             $message->message = "";
-           
         }
         echo json_encode($message); 
         return $message;
     }
     else{
-        //echo json_encode($retval);
         return $retval;
     }
 ?>

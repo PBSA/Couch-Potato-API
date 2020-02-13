@@ -90,7 +90,7 @@
             }
             else{
                 $message->status = "400";
-                $message->title = "Failed to update whistle start time";
+                $message->title = "Failed to add whistle end time";
                 $message->subcode = "492";
                 $message->message = "";
                 echo json_encode($message); 

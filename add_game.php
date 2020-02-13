@@ -85,23 +85,23 @@ if($retval->status !=  $codes->success200){
     return false;
 }
 
+// game must not already exist
+/*$retval = validateProgress($game->match_id, 'create');
+if($retval->status !=  $codes->success200){
+    echo json_encode($retval);
+    return false;
+} */
 // ********************************************
 // ** Done validating, now do some real work **
 // ********************************************
 
-
 // send new game to BOS
 $retval =  bos_Send($game);   
-
 if($retval->status == "200" ){
-        
         // get the last event id
         $q = $con->query("SELECT MAX(id) as `id` FROM events WHERE `date` = '$game->date' AND `league` = '$game->league'");
         $row=mysqli_fetch_object($q);
-        if($q){
-          
-        }
-        else{
+        if(!$q){
             $message->status = "400";
             $message->title = "Failed to get last event id";
             $message->subcode = "471";
@@ -109,7 +109,6 @@ if($retval->status == "200" ){
             echo json_encode($message); 
             return $message;
         }
-
         // if this is the first game then a new event has to be created as well
         if($row->id == null){
             // first game so add new event
@@ -139,21 +138,6 @@ if($retval->status == "200" ){
                 echo json_encode($message); 
                 return $message;
             }
-
-             // get the new event id
-            $q = $con->query("SELECT MAX(id) as `id` FROM events");
-            $row=mysqli_fetch_object($q);
-            if($q){
-                $game->eventid = $row->id ;
-            }
-            else{
-                $message->status = "400";
-                $message->title = "Failed to add new event";
-                $message->subcode = "473";
-                $message->message = "";
-                echo json_encode($message); 
-                return $message;
-            }
         }
         else{
             $game->eventid = $row->id;
@@ -161,11 +145,9 @@ if($retval->status == "200" ){
         // add game
         $retval = addGame($game);
         echo json_encode($retval);
-        return $retval;
-        
+        return $retval; 
     }
     else{
-        //echo json_encode($retval);
         return $message;
     }
 
@@ -219,8 +201,8 @@ if($retval->status == "200" ){
         $q = mysqli_query($con, "INSERT INTO `progress` (`game`, `status`) VALUES ('$game->id', '0')"); 
         if(!$q){
             $message->status = "400";
-            $message->title = "Failed to insert game progress";
-            $message->subcode = "476";
+            $message->title = "Failed to add new game progress";
+            $message->subcode = "477";
             $message->message = "";
             return $message;
         } 

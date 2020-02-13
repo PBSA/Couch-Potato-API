@@ -234,8 +234,8 @@
         if($whistle_start_time < $start_time){
             $message->status = $codes->error400;
             $message->subcode = "481";
-            $message->title = "Whistle start time is before start time";
-            $message->message = "whistle_start_time must be equal to, or after, the start_time";
+            $message->title = "Whistle start time [" . $whistle_start_time . "] is before start time [" . $start_time . "]";
+            $message->message = "Whistle start time must be equal to, or after, the start time";
         }
         else{ $message->status = $codes->success200; }
         return $message;
@@ -248,9 +248,56 @@
         // whistle start time must be after start time.
         if($whistle_start_time < $start_time){
             $message->status = $codes->error400;
-            $message->subcode = "481";
+            $message->subcode = "491";
             $message->title = "Whistle end time is before whistle start time";
-            $message->message = "whistle_end_time must be equal to, or after, the whistle_start_time";
+            $message->message = "Whistle end time must be equal to, or after, the whistle start time";
+        }
+        else{ $message->status = $codes->success200; }
+        return $message;
+    }
+
+    function validateProgress($match_id, $call){
+        global $message;
+        global $codes;
+
+        if($call == "create"){
+            // game can't already have been created
+            $q = $con->query("SELECT `id` FROM progress WHERE `game`= '$match_id'");
+            $row=mysqli_fetch_object($q);
+            if($row != null){
+                $message->status = $codes->error400;
+                $message->subcode = "478";
+                $message->title = "Game already exists";
+                $message->message = "A game can't be created more than once";
+            }
+        }
+        elseif($call == "in_progress"){
+            // game can't already have started
+            $message->status = $codes->error400;
+            $message->subcode = "484";
+            $message->title = "Game has already started";
+            $message->message = "A game can't be started more than once";
+        }
+        elseif($call == "result"){
+            // game must be in progress
+            $message->status = $codes->error400;
+            $message->subcode = "486";
+            $message->title = "Game hasn't started";
+            $message->message = "Scores can only be added to a game in progress";
+        }
+        elseif($call == "finish"){
+            // game must have a result
+            $message->status = $codes->error400;
+            $message->subcode = "";
+            $message->title = "Game must have a score";
+            $message->message = "A game can't be finished until the scores are added";
+        }
+        elseif($call == "canceled"){
+            // game must have not started or be in progress
+            $message->status = $codes->error400;
+            $message->subcode = "";
+            $message->title = "Game can't be canceled";
+            $message->message = "A game can only be canceled if it hasn't started, or if it's still in progress";
         }
         else{ $message->status = $codes->success200; }
         return $message;

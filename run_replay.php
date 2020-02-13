@@ -1,8 +1,9 @@
 <?php
 
 include "db.php"; 
-include "get_config.php";
+include "incidents.php";
 include "logging.php";
+include "get_config.php";
 
 $sport = $_GET['sport'];
 $leagues = $_GET['leagues'];
@@ -34,7 +35,7 @@ foreach ($str_arr as $league)  {
                             AND `status` = 0 AND `date` BETWEEN '$start' AND '$end'");
 
     while ($obj = mysqli_fetch_array($result)) {
-            $incident = json_encode(make_incident($obj),JSON_UNESCAPED_SLASHES);
+            $incident = json_encode(make_incident($obj, $config),JSON_UNESCAPED_SLASHES);
             $count++;
             if(send_message($incident) == false){$error++;};
         } 
@@ -83,61 +84,11 @@ function send_message($incident){
     }
     else
         return true;
-}
+    }
 
-function make_incident($game){
-    // make a create incident message
-
-    $timestamp = gmdate("Y-m-d") . 'T' . gmdate("H:i:s") . '.000Z';
-    $starttime = rtrim(gmdate(DATE_ISO8601, strtotime($game['date'] . "T" . $game['starttime'])),':+00000') . ':00.000Z';
-    $unique_string = unique_string($starttime, $game);
-    
-    $incident = new stdClass();
-    $incident->call = 'create';
-    $incident->unique_string = $unique_string;
-    $incident->timestamp = $timestamp;
-
-    $arguments = new stdClass();
-    $arguments->season = '2019/2020';
-
-    $id = new stdClass();
-    $id->home = $game['hometeam'];
-    $id->away = $game['awayteam'];
-    $id->sport = $game['sportname'];
-    $id->start_time = $starttime;
-    $id->event_group_name = $game['league'];
-
-    $provider_info = new stdClass();
-    $provider_info->match_id = $game['gameid'];
-    $provider_info->name = $config->providers->name;
-    $provider_info->source = 'direct string input';
-    $provider_info->source_file = '';
-    $provider_info->pushed = $timestamp;
-
-    $incident->arguments = $arguments;
-    $incident->id = $id;
-    $incident->provider_info = $provider_info;
-
-    return $incident;
-}
-
-function unique_string($starttime, $game){
-    // create a unique incident identifier
-    $uniquestring = $starttime . '__';
-    $uniquestring .= format_text($game['sportname']) . "__" . format_text($game['league']) . "__";
-    $uniquestring .= format_text($game['hometeam']) . "__" . format_text($game['awayteam']) . "__";
-    $uniquestring .= 'create__20192020';
-    return strtolower($uniquestring);
-}
-
-function format_text($string){
-    // replace space with underscores
-    return str_replace(' ', '_', $string);
-}
-
-function output_results($league, $count){
-    global $output;
-    $output .= $league . ': ' . $count . ', ';
-}
+    function output_results($league, $count){
+        global $output;
+        $output .= $league . ': ' . $count . ', ';
+    }
 
 ?>

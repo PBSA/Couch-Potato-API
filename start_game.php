@@ -37,7 +37,6 @@
         echo json_encode($retval);
         return false;
     }
-
     
     // is sport valid
     $retval = validateSport($game->sport);
@@ -47,7 +46,6 @@
     }
     
     // is league valid
-    
     $retval = validateLeague($game->sport, $game->league);
     if($retval->status !=  $codes->success200){
         echo json_encode($retval);
@@ -72,7 +70,14 @@
     if($retval->status !=  $codes->success200){
         echo json_encode($retval);
         return false;
-    }*/
+    }
+
+    // game has already started
+    $retval = validateProgress($game->match_id, 'in_progress');
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    } */
 
     // ********************************************
     // ** Done validating, now do some real work **
@@ -81,7 +86,6 @@
     
      // send BOS incident
      $retval = bos_Send($game);
- 
      if($retval->status == "200"){
                 // update whistle_start_time
                 $q = mysqli_query($con, "UPDATE `games` SET `whistle_start_time` = '$game->whistle_start_time' WHERE `id` = '$game->match_id'");  
@@ -92,7 +96,7 @@
                 }
                 else{
                     $message->status = "400";
-                    $message->title = "Failed to update whistle start time";
+                    $message->title = "Failed to add whistle start time";
                     $message->subcode = "482";
                     $message->message = "";
                     echo json_encode($message); 
@@ -111,7 +115,6 @@
                 return $message;
     }
     else{
-        //echo json_encode($retval);
         return $retval;
     }
        

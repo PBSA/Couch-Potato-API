@@ -64,6 +64,13 @@
             echo json_encode($retval);
             return false;
         }
+
+        // game must be in progress
+        /*$retval = validateProgress($game->match_id, 'result');
+        if($retval->status !=  $codes->success200){
+            echo json_encode($retval);
+            return false;
+        } */
   
          // send BOS incident
          $retval = bos_Send($game);
