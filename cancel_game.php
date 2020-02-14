@@ -21,7 +21,6 @@
     $game->start_time = $data['start_time'];
     $game->match_id  = $data['match_id'];
 
-    // can only cancel games that are 'Not Started' or 'In Progress'
 
     // ******************************************
     // *********** Validate first ***************
@@ -61,6 +60,13 @@
         echo json_encode($retval);
         return false;
     }
+
+     // can only cancel games that are 'Not Started' or 'In Progress'
+     $retval = validateProgress($game);
+     if($retval->status !=  $codes->success200){
+         echo json_encode($retval);
+         return false;
+     } 
 
     // send BOS incident
     $retval = bos_Send($game);

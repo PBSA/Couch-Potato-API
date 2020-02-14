@@ -256,13 +256,14 @@
         return $message;
     }
 
-    function validateProgress($match_id, $call){
+    function validateProgress($game){
         global $message;
         global $codes;
+        global $con;
 
-        if($call == "create"){
+        if($game->call == "create"){
             // game can't already have been created
-            $q = $con->query("SELECT `id` FROM progress WHERE `game`= '$match_id'");
+            $q = $con->query("SELECT `id` FROM games WHERE `hometeam`= '$game->home' AND `awayteam`= '$game->away' AND `starttime`= '$game->time'");
             $row=mysqli_fetch_object($q);
             if($row != null){
                 $message->status = $codes->error400;
@@ -271,33 +272,49 @@
                 $message->message = "A game can't be created more than once";
             }
         }
-        elseif($call == "in_progress"){
+        elseif($game->call == "in_progress"){
             // game can't already have started
-            $message->status = $codes->error400;
-            $message->subcode = "484";
-            $message->title = "Game has already started";
-            $message->message = "A game can't be started more than once";
+            $q = $con->query("SELECT `status` FROM progress WHERE `game`= '$game->match_id'");
+            $row=mysqli_fetch_object($q);
+            if($row->status != 0){
+                $message->status = $codes->error400;
+                $message->subcode = "484";
+                $message->title = "Game has already started";
+                $message->message = "A game can't be started more than once";
+            }
         }
-        elseif($call == "result"){
+        elseif($game->call == "result"){
             // game must be in progress
-            $message->status = $codes->error400;
-            $message->subcode = "486";
-            $message->title = "Game hasn't started";
-            $message->message = "Scores can only be added to a game in progress";
+            $q = $con->query("SELECT `status` FROM progress WHERE `game`= '$game->match_id'");
+            $row=mysqli_fetch_object($q);
+            if($row->status != 1){
+                $message->status = $codes->error400;
+                $message->subcode = "486";
+                $message->title = "Game hasn't started";
+                $message->message = "Scores can only be added to a game in progress";
+            }
         }
-        elseif($call == "finish"){
+        elseif($game->call == "finish"){
             // game must have a result
-            $message->status = $codes->error400;
-            $message->subcode = "";
-            $message->title = "Game must have a score";
-            $message->message = "A game can't be finished until the scores are added";
+            $q = $con->query("SELECT `homescore` FROM games WHERE `id` = '$game->match_id'");
+            $row=mysqli_fetch_object($q);
+            if($row->homescore == null){
+                $message->status = $codes->error400;
+                $message->subcode = "494";
+                $message->title = "Game must have a score";
+                $message->message = "A game can't be finished until the scores are added";
+            }
         }
-        elseif($call == "canceled"){
+        elseif($game->call == "canceled"){
             // game must have not started or be in progress
-            $message->status = $codes->error400;
-            $message->subcode = "";
-            $message->title = "Game can't be canceled";
-            $message->message = "A game can only be canceled if it hasn't started, or if it's still in progress";
+            $q = $con->query("SELECT `status` FROM progress WHERE `game`= '$game->match_id'");
+            $row=mysqli_fetch_object($q);
+            if($row->status == 2 || $row->status == 4){
+                $message->status = $codes->error400;
+                $message->subcode = "497";
+                $message->title = "Game can't be canceled";
+                $message->message = "A game can only be canceled if it hasn't started, or if it's still in progress";
+            }
         }
         else{ $message->status = $codes->success200; }
         return $message;

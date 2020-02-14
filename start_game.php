@@ -71,19 +71,18 @@
         echo json_encode($retval);
         return false;
     }
-
-    // game has already started
-    $retval = validateProgress($game->match_id, 'in_progress');
+    */
+    // has game already started
+    $retval = validateProgress($game);
     if($retval->status !=  $codes->success200){
         echo json_encode($retval);
         return false;
-    } */
+    } 
 
     // ********************************************
     // ** Done validating, now do some real work **
     // ********************************************
 
-    
      // send BOS incident
      $retval = bos_Send($game);
      if($retval->status == "200"){

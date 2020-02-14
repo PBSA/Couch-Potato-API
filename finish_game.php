@@ -23,9 +23,6 @@
         
         $message = new stdClass;
 
-
-        // game can only be finished if score has been added
-
     // ******************************************
     // *********** Validate first ***************
     // ******************************************
@@ -71,6 +68,14 @@
         echo json_encode($retval);
         return false;
     }
+
+    // game can only be finished if score has been added
+    $retval = validateProgress($game);
+    if($retval->status !=  $codes->success200){
+        echo json_encode($retval);
+        return false;
+    } 
+
 
     // ********************************************
     // ** Done validating, now do some real work **

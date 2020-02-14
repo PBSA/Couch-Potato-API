@@ -85,12 +85,13 @@ if($retval->status !=  $codes->success200){
     return false;
 }
 
+
 // game must not already exist
-/*$retval = validateProgress($game->match_id, 'create');
+$retval = validateProgress($game);
 if($retval->status !=  $codes->success200){
     echo json_encode($retval);
     return false;
-} */
+} 
 // ********************************************
 // ** Done validating, now do some real work **
 // ********************************************
