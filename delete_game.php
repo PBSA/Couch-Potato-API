@@ -12,11 +12,13 @@
 
     $q = mysqli_query($con, "DELETE FROM `games` WHERE `id` = $id"); 
     if($q){
-        $message['status'] = "success"; 
+        $message->title = "Game deleted";
+        $message->message = $game->$id;   
     }
     else{
-        $message['status'] = "error";
+        $message->status = "400";
+        $message->title = "Failed to delete game id [" . $id . "]";
+        $message->subcode = "431";
+        $message->message = "Game might not exist or parameters are missing.";
     }
-    echo ($q);
-    echo mysqli_error($con); 
 ?>

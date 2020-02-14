@@ -114,7 +114,6 @@
             return $message;
         }
         else{
-            //echo json_encode($retval);
             return $retval;
         }
 
