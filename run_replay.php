@@ -43,7 +43,6 @@ foreach ($str_arr as $league)  {
           
             if(send_message($incident) > 0 ){
                 $error++;
-               
             }
             else{
                 $count++;
@@ -70,7 +69,6 @@ function send_message($incident){
     global $witnesses;
     $error = 0;
     // send incident message to BOS witnesses
-  
     foreach($witnesses as $witness) {
         
         $curl = curl_init(trim($witness->url)); // one witness for now
@@ -102,9 +100,9 @@ function send_message($incident){
     return $error;
 }
 
-    function output_results($league, $count){
-        global $output;
-        $output .= $league . ': ' . $count . ', ';
-    }
+function output_results($league, $count){
+    global $output;
+    $output .= $league . ': ' . $count . ', ';
+}
 
 ?>
