@@ -87,7 +87,7 @@
 
          if($retval->status == '200'){
             // update whistle_start_time
-            $q = mysqli_query($con, "UPDATE `games` SET `whistle_start_time` = '$game->whistle_start_time' WHERE `id` = '$game->match_id'");  
+            $q = mysqli_query($con, "UPDATE `games` SET `whistle_end_time` = '$game->whistle_end_time' WHERE `id` = '$game->match_id'");  
             if($q){
                 $message->status = "200";
                 $message->title = "Game finished";

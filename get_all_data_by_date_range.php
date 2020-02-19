@@ -16,15 +16,16 @@
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 
     }
-    if(count($data) != 0){
-        echo json_encode($data);
-    }
-    else{
+
+    if(!$q){
         $message->status = "400";
         $message->title = "Failed to get all games in the range [" . $start . "] to [". $end . "]";
         $message->subcode = "432";
         $message->message = "Invalid date range or parameters are missing";
         echo json_encode($message);
+    }
+    else{
+        echo json_encode($data);
     }
 
 ?>
