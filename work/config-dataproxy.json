@@ -1,6 +1,6 @@
 
 {
-    "name": "couch-potato",
+    "name": "couch_potato",
     "api_url": "https://localhost/",
     "notifications": 3000,
     "subscriptions":
@@ -15,7 +15,7 @@
         },
     "providers": 
         {
-            "name": "couch-potato",
+            "name": "couch_potato",
             "user": "",
             "password": ""
         }  

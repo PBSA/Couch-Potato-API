@@ -9,19 +9,25 @@
                                     VALUES ('success', '$msg->id', '$msg->id_approve', '$message', '$url')");             
     }
 
-    function log_error($msg){
+    function log_replay_error($msg, $url, $incident){
         global $con;
         $errormessage = json_encode($msg->message);
         $q = mysqli_query($con,  "INSERT INTO `replay_error_log` ( `url`,`message`,`incident` ) 
                                     VALUES ('$url','$message', '$incident')");
     }
 
+    function log_error($msg){
+        global $con;
+        $message = json_encode($msg->message);
+        $q = mysqli_query($con,  "INSERT INTO `errorlog` ( `status`,`subcode`,`title`,`message` ) 
+                                    VALUES ('$msg->status','$msg->subcode', '$msg->title', '$message')");
+    }
+
     function log_incident($data){
         global $con;
-        $user = 1; 
         $msg = json_encode($data);
-        $q = mysqli_query($con,  "INSERT INTO `incidents` ( `user`, `timestamp`, `uniquename`, `call`, `message` ) 
-                                    VALUES ('$user', '$data->timestamp', '$data->unique_string', '$data->call', '$msg')");  
+        $q = mysqli_query($con,  "INSERT INTO `incidents` (`timestamp`, `uniquename`, `call`, `message` ) 
+                                    VALUES ('$data->timestamp', '$data->unique_string', '$data->call', '$msg')");  
         if($q){
             $message['status'] = "success"; 
         }

@@ -39,6 +39,7 @@ function bos_Send($game){
                 if($message->title == "Not normalized incident"){$message->subcode = "450";}
                 if($message->title == "Invalid data format"){$message->subcode = "451";}
                 $message->message = $incident;
+                log_error($message);
                 echo json_encode($message);
                 return $message;
             }
