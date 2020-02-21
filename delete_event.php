@@ -7,7 +7,8 @@
     
     include "db.php"; 
 
-    $message = array(); 
+    $message = new stdClass;
+
     $date = $_GET['date']; 
     $league = $_GET['league']; 
 

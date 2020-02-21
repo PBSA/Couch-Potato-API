@@ -10,12 +10,15 @@
     $start = $_GET['startdate'];
     $end = $_GET['enddate'];
 
+    $message = new stdClass;
+
     $data=array(); 
     $q = $con->query("SELECT * FROM vwgameevents WHERE `datetime` BETWEEN '$start' AND '$end'");
 
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 
     }
+    
 
     if(!$q){
         $message->status = "400";

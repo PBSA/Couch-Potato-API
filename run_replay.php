@@ -14,6 +14,7 @@ $replay = new stdClass;
 $error = 0;
 $total = 0;
 $output;
+$message = new stdClass;
 
 
 // get witnesses

@@ -9,6 +9,7 @@
 
     $date = $_GET['date'];
     $league = $_GET['league'];
+    $message = new stdClass;
    
    $data=array(); 
    $q = $con->query("SELECT MAX(gameid) as `id` FROM vwgameevents WHERE `date` = '$date' AND `league` = '$league'");

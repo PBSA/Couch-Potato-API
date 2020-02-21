@@ -10,6 +10,7 @@
     $league = $_GET['league'];
     $start = $_GET['start'];
     $end = $_GET['end'];
+    $message = new stdClass;
    
     $data=array(); 
     $q = $con->query("SELECT * FROM vwgameevents WHERE league = '$league' AND datetime BETWEEN '$start' AND '$end'");

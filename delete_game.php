@@ -7,7 +7,7 @@
 
     include "db.php"; 
 
-    $message = array(); 
+    $message = new stdClass;
     $id = $_GET['id']; 
 
     $q = mysqli_query($con, "DELETE FROM `games` WHERE `id` = $id"); 

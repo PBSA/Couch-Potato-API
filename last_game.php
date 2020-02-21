@@ -6,6 +6,8 @@
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
     include "db.php"; 
+
+    $message = new stdClass;
    
    $data=array(); 
    $q = $con->query("SELECT * FROM vwgameevents ORDER BY gameid DESC LIMIT 1");
