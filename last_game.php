@@ -7,7 +7,7 @@
 
     include "db.php"; 
 
-    $message = new stdClass;
+    $message = new stdClass();
    
    $data=array(); 
    $q = $con->query("SELECT * FROM vwgameevents ORDER BY gameid DESC LIMIT 1");

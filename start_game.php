@@ -11,7 +11,7 @@
     $postdata = file_get_contents("php://input");
     $data = json_decode($postdata,true);
 
-    $game = new stdClass;
+    $game = new stdClass();
     $game->call = 'in_progress';
     $game->sport = $data['sport']; 
     $game->league = $data['league']; 
@@ -21,7 +21,7 @@
     $game->whistle_start_time = $data['whistle_start_time'];
     $game->match_id  = $data['match_id'];
     
-    $message = new stdClass;
+    $message = new stdClass();
     
  
     // game can only be started if status is 'Not Started' (0)

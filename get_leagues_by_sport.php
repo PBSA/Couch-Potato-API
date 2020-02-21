@@ -8,7 +8,7 @@
     include "db.php"; 
 
     $sport = $_GET['sport'];
-    $message = new stdClass;
+    $message = new stdClass();
    
     $data=array(); 
     $q = $con->query("SELECT * FROM leagues WHERE sport = $sport");

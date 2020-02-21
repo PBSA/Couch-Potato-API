@@ -10,11 +10,11 @@ $sport = $_GET['sport'];
 $leagues = $_GET['leagues'];
 $start = $_GET['start'];
 $end = $_GET['end'];
-$replay = new stdClass;
+$replay = new stdClass();
 $error = 0;
 $total = 0;
 $output;
-$message = new stdClass;
+$message = new stdClass();
 
 
 // get witnesses

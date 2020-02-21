@@ -11,9 +11,9 @@
 
     $postdata = file_get_contents("php://input");
     $data = json_decode($postdata,true);
-    $message = new stdClass;
+    $message = new stdClass();
 
-    $game = new stdClass;
+    $game = new stdClass();
     $game->call = 'canceled';
     $game->sport = $data['sport']; 
     $game->league = $data['league']; 

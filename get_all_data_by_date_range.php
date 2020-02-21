@@ -10,7 +10,7 @@
     $start = $_GET['startdate'];
     $end = $_GET['enddate'];
 
-    $message = new stdClass;
+    $message = new stdClass();
 
     $data=array(); 
     $q = $con->query("SELECT * FROM vwgameevents WHERE `datetime` BETWEEN '$start' AND '$end'");
@@ -19,7 +19,6 @@
         $data[]=$row; 
     }
     
-
     if(!$q){
         $message->status = "400";
         $message->title = "Failed to get all games in the range [" . $start . "] to [". $end . "]";

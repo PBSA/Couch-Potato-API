@@ -3,8 +3,8 @@
     include "db.php"; 
 
     $data=array(); 
-    $message = new stdClass;
-    $codes = new stdClass;
+    $message = new stdClass();
+    $codes = new stdClass();
     $paramList = array();
     $codes->error400 = "400";
     $codes->success200 = "Success";

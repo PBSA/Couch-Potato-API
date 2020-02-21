@@ -10,10 +10,11 @@
     $league = $_GET['league'];
     $start = $_GET['start'];
     $end = $_GET['end'];
-    $message = new stdClass;
+
+    $message = new stdClass();
    
     $data=array(); 
-    $q = $con->query("SELECT * FROM vwgameevents WHERE league = '$league' AND datetime BETWEEN '$start' AND '$end'");
+    $q = $con->query("SELECT * FROM couch_potato.vwgameevents WHERE league = '$league' AND datetime BETWEEN '$start' AND '$end'");
 
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 

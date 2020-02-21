@@ -11,7 +11,7 @@
         $postdata = file_get_contents("php://input");
         $data = json_decode($postdata,true);
 
-        $game = new stdClass;
+        $game = new stdClass();
         $game->call = 'finish';
         $game->sport = $data['sport']; 
         $game->league = $data['league']; 
@@ -21,7 +21,7 @@
         $game->whistle_end_time = $data['whistle_end_time'];
         $game->match_id  = $data['match_id']; 
         
-        $message = new stdClass;
+        $message = new stdClass();
 
     // ******************************************
     // *********** Validate first ***************

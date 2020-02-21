@@ -1,6 +1,5 @@
 <?php
 
-
     function make_incident($game, $config){
         $timestamp = gmdate("Y-m-d") . 'T' . gmdate("H:i:s") . '.000Z';        
         $unique_string = unique_string($game->start_time, $game);      

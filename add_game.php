@@ -12,7 +12,7 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 $postdata = file_get_contents("php://input");
 $data = json_decode($postdata,true);
 
-$game = new stdClass;
+$game = new stdClass();
 $game->sport = $data['sport']; 
 $game->league = $data['league']; 
 $game->user = $data['user'];
@@ -23,7 +23,7 @@ $game->date = substr($game->start_time,0,10);
 $game->time = substr($game->start_time,11,5);
 $game->call = 'create';
 
-$message = new stdClass;
+$message = new stdClass();
 
 // ******************************************
 // *********** Validate first ***************
@@ -63,13 +63,6 @@ if($retval->status !=  $codes->success200){
     echo json_encode($retval);
     return false;
 }
-
-/* is start time valid
-$retval = validateDateTime($game->start_time);
-if($retval->status !=  $codes->success200){
-    echo json_encode($retval);
-    return false;
-}*/
 
 // are teams different
 $retval = validateBothTeams($game->home, $game->away);

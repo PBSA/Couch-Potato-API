@@ -9,7 +9,7 @@
 
     $date = $_GET['date'];
     $league = $_GET['league'];
-    $message = new stdClass;
+    $message = new stdClass();
    
    $data=array(); 
    $q = $con->query("SELECT MAX(id) as `id` FROM events WHERE `date` = '$date' AND `league` = '$league'");

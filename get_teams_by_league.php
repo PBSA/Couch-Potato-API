@@ -6,7 +6,7 @@
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
     include "db.php"; 
-    $message = new stdClass;
+    $message = new stdClass();
 
     $league = $_GET['league'];
    

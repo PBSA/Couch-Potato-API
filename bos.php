@@ -7,7 +7,7 @@ function bos_Send($game){
    include "get_config.php";
 
    $witnesses = $config->subscriptions->witnesses;
-   $message = new stdClass;
+   $message = new stdClass();
   
   // send incident message to all BOS witnesses
   foreach($witnesses as $witness) {
@@ -47,11 +47,9 @@ function bos_Send($game){
                 
                 log_incident(json_decode($incident));
                 log_success($decoded, $witness-url);
-               
                 $message->status = "200";
                 $message->title = "Incident sent";
                 $message->message = $decoded;
-                
                 return $message;
             }
         }

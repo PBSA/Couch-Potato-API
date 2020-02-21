@@ -8,7 +8,7 @@
     include "db.php"; 
 
     $league = $_GET['league'];
-    $message = new stdClass;
+    $message = new stdClass();
    
     $data=array(); 
     $q = $con->query("SELECT * FROM vwgameevents WHERE league = '$league'");
