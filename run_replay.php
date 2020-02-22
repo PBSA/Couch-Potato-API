@@ -29,7 +29,7 @@ foreach ($str_arr as $league)  {
         $data = array(); 
         $game = '';
         $count=0;
-        $q = $con->query("SELECT * FROM vwgameevents WHERE  `sportname` = '$sport' AND `league` = '$league' 
+        $q = $con->query("SELECT * FROM couch_potato.vwgameevents WHERE  `sportname` = '$sport' AND `league` = '$league' 
                                 AND `status` = 0 AND `date` BETWEEN '$start' AND '$end'");
         
         while ($row=mysqli_fetch_object($q)){

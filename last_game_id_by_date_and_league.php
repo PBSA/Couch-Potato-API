@@ -12,7 +12,7 @@
     $message = new stdClass();
    
    $data=array(); 
-   $q = $con->query("SELECT MAX(gameid) as `id` FROM vwgameevents WHERE `date` = '$date' AND `league` = '$league'");
+   $q = $con->query("SELECT MAX(gameid) as `id` FROM couch_potato.vwgameevents WHERE `date` = '$date' AND `league` = '$league'");
 
    $row=mysqli_fetch_object($q);
    if($row != null){

@@ -9,7 +9,7 @@
     $message = new stdClass();
    
     $data=array(); 
-    $q = $con->query("SELECT * FROM vwsports");
+    $q = $con->query("SELECT * FROM couch_potato.vwsports");
 
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 

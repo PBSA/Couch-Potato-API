@@ -149,7 +149,7 @@
         global $codes;
 
         // get all leagues for selected sport and check for match
-        $q = $con->query("SELECT `leaguename` FROM vwsports WHERE `sportsname`= '$sport'");
+        $q = $con->query("SELECT `leaguename` FROM couch_potato.vwsports WHERE `sportsname`= '$sport'");
         while ($row=mysqli_fetch_object($q)){
             $data[]=$row->leaguename; 
         }
@@ -169,7 +169,7 @@
         global $codes;
 
         // get all teams for selected league and check for match
-        $q = $con->query("SELECT `teamname` FROM vwteams WHERE `leaguename`= '$league'");
+        $q = $con->query("SELECT `teamname` FROM couch_potato.vwteams WHERE `leaguename`= '$league'");
         while ($row=mysqli_fetch_object($q)){
             $data[]=$row->teamname; 
         }

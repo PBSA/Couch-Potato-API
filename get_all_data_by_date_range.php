@@ -13,7 +13,7 @@
     $message = new stdClass();
 
     $data=array(); 
-    $q = $con->query("SELECT * FROM vwgameevents WHERE `datetime` BETWEEN '$start' AND '$end'");
+    $q = $con->query("SELECT * FROM couch_potato.vwgameevents WHERE `datetime` BETWEEN '$start' AND '$end'");
 
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 

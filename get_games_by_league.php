@@ -11,7 +11,7 @@
     $message = new stdClass();
    
     $data=array(); 
-    $q = $con->query("SELECT * FROM vwgameevents WHERE league = '$league'");
+    $q = $con->query("SELECT * FROM couch_potato.vwgameevents WHERE league = '$league'");
 
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 

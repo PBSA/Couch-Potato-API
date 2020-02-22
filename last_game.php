@@ -10,7 +10,7 @@
     $message = new stdClass();
    
    $data=array(); 
-   $q = $con->query("SELECT * FROM vwgameevents ORDER BY gameid DESC LIMIT 1");
+   $q = $con->query("SELECT * FROM couch_potato.gameevents ORDER BY gameid DESC LIMIT 1");
 
    $row=mysqli_fetch_object($q);
     if($row != null){
