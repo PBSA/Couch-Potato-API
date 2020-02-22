@@ -23,11 +23,11 @@
                                     VALUES ('$msg->status','$msg->subcode', '$msg->title', '$message')");
     }
 
-    function log_incident($data){
+    function log_incident($data, $url){
         global $con;
         $msg = json_encode($data);
-        $q = mysqli_query($con,  "INSERT INTO `incidents` (`timestamp`, `uniquename`, `call`, `message` ) 
-                                    VALUES ('$data->timestamp', '$data->unique_string', '$data->call', '$msg')");  
+        $q = mysqli_query($con,  "INSERT INTO `incidents` (`timestamp`, `uniquename`, `call`, `message`, `url` ) 
+                                    VALUES ('$data->timestamp', '$data->unique_string', '$data->call', '$msg', '$url')");  
         if($q){
             $message['status'] = "success"; 
         }

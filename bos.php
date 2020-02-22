@@ -45,8 +45,8 @@ function bos_Send($game){
             }
             else{   
                 
-                log_incident(json_decode($incident));
-                log_success($decoded, $witness-url);
+                log_incident(json_decode($incident), $witness->url);
+                log_success($decoded, $witness->url);
                 $message->status = "200";
                 $message->title = "Incident sent";
                 $message->message = $decoded;
