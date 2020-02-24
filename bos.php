@@ -33,7 +33,6 @@ function bos_Send($game){
             curl_close($curl);
             $decoded = json_decode($curl_response);
             if($decoded == null){
-               
                 $message->status = "400";
                 $message->title = $curl_response;
                 if($message->title == "Not normalized incident"){$message->subcode = "450";}
