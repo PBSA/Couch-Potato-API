@@ -89,6 +89,22 @@ if($retval->status !=  $codes->success200){
 // ** Done validating, now do some real work **
 // ********************************************
 
+// get the next id
+$q = $con->query("SELECT MAX(id) as `id` FROM `games`");
+$row=mysqli_fetch_object($q);
+if($q){
+    $game->match_id = $row->id + 1;  
+ 
+}
+else{
+    $message->status = "400";
+    $message->title = "Failed to get new game id";
+    $message->subcode = "475";
+    $message->message = "";
+    return $message;
+} 
+
+
 // send new game to BOS
 $retval =  bos_Send($game);   
 if($retval->status == "200" ){
@@ -162,27 +178,14 @@ if($retval->status == "200" ){
         return $message;
     } 
     
-    // get the last id
-    $q = $con->query("SELECT MAX(id) as `id` FROM `games`");
-    $row=mysqli_fetch_object($q);
-    if($q){
-        $game->id = $row->id;   
-    }
-    else{
-        $message->status = "400";
-        $message->title = "Failed to get new game id";
-        $message->subcode = "475";
-        $message->message = "";
-        return $message;
-    } 
-   
+    
     // insert the game progress. Set to 'Not Started'
     // if this is the very record then need to do an Insert
-    $q = $con->query("SELECT `status` FROM `progress` WHERE `game` = '$game->id'");  
+    $q = $con->query("SELECT `status` FROM `progress` WHERE `game` = '$game->match_id'");  
     $row=mysqli_fetch_object($q);
     if($row != null)
     {   //update
-        $q = mysqli_query($con, "UPDATE `progress` SET `status` = '0' WHERE `game` = '$game->id'"); 
+        $q = mysqli_query($con, "UPDATE `progress` SET `status` = '0' WHERE `game` = '$game->match_id'"); 
         if(!$q){
             $message->status = "400";
             $message->title = "Failed to update game progress";
@@ -192,7 +195,7 @@ if($retval->status == "200" ){
         } 
     }
     else{ //insert
-        $q = mysqli_query($con, "INSERT INTO `progress` (`game`, `status`) VALUES ('$game->id', '0')"); 
+        $q = mysqli_query($con, "INSERT INTO `progress` (`game`, `status`) VALUES ('$game->match_id', '0')"); 
         if(!$q){
             $message->status = "400";
             $message->title = "Failed to add new game progress";
@@ -201,7 +204,6 @@ if($retval->status == "200" ){
             return $message;
         } 
     } 
-    $game->matchid = $game->id;
     $message->status = "200";
     $message->title = "Game added";
     $message->message = $game->home . " v " . $game->away . " - " . $game->start_time;

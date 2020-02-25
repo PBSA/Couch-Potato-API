@@ -19,6 +19,7 @@
         $game->away = $data['away'];
         $game->start_time = $data['start_time'];
         $game->whistle_end_time = $data['whistle_end_time'];
+        $game->whistle_start_time = $data['whistle_start_time'];
         $game->match_id  = $data['match_id']; 
         
         $message = new stdClass();
