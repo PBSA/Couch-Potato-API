@@ -25,7 +25,7 @@ function bos_Send($game){
         curl_close($curl);
         $message->status = "520";
         $message->subcode = "520";
-        $message->title = "Unknown error";
+        $message->title = "BOS server may not be available";
         $message->message = $info;
         echo json_encode($message);
         }
@@ -54,4 +54,5 @@ function bos_Send($game){
         }
     }  
 }
+
 ?>
