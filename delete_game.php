@@ -10,11 +10,11 @@
     $message = new stdClass();
 
     $id = $_GET['id']; 
-
     $q = mysqli_query($con, "DELETE FROM `games` WHERE `id` = $id"); 
     if($q){
+        $message->status = "200";
         $message->title = "Game deleted";
-        $message->message = $game->$id;   
+        $message->message = "ID: " . $id;   
     }
     else{
         $message->status = "400";
@@ -22,4 +22,5 @@
         $message->subcode = "431";
         $message->message = "Game might not exist or parameters are missing.";
     }
+    echo json_encode($message);
 ?>

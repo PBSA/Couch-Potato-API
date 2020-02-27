@@ -3,7 +3,6 @@
         include "bos.php";
         include "validations.php";
 
-        //header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
         header('Access-Control-Max-Age: 1000');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
@@ -75,26 +74,21 @@
          // send BOS incident
          $retval = bos_Send($game);
 
-         if($retval->status == '200'){
-                // update the score
-                $q = mysqli_query($con, "UPDATE `games` SET  `homescore` = '$game->home_score',`awayscore` = '$game->away_score' 
-                                            WHERE `id` = '$game->match_id'"); 
-                if($q){
-                    $message->status = "200";
-                    $message->title = "Scores added";
-                    $message->message = $game->home . " " . $game->home_score . " v " . $game->away . " " . $game->away_score;   
-                }
-                else{
-                    $message->status = "400";
-                    $message->subcode = "487";
-                    $message->title = "Failed to add score";
-                    $message->message = "";
-                } 
-                echo json_encode($message);
-                return $message;          
+        // update the score
+        $q = mysqli_query($con, "UPDATE `games` SET  `homescore` = '$game->home_score',`awayscore` = '$game->away_score' 
+                                    WHERE `id` = '$game->match_id'"); 
+        if($q){
+            $message->status = "200";
+            $message->title = "Scores added";
+            $message->message = $game->home . " " . $game->home_score . " v " . $game->away . " " . $game->away_score;   
         }
         else{
-            //echo json_encode($retval);
-            return $retval;
-        }
+            $message->status = "400";
+            $message->subcode = "487";
+            $message->title = "Failed to add score";
+            $message->message = "";
+        } 
+        $message->message .= $retval->message; 
+        echo json_encode($message);
+        return $message; 
 ?>

@@ -84,38 +84,31 @@
 
          // send BOS incident
          $retval = bos_Send($game);
-        
 
-         if($retval->status == '200'){
-            // update whistle_start_time
-            $q = mysqli_query($con, "UPDATE `games` SET `whistle_end_time` = '$game->whistle_end_time' WHERE `id` = '$game->match_id'");  
-            if($q){
-                $message->status = "200";
-                $message->title = "Game finished";
-                $message->message = $game->home . " v " . $game->away. " - [whistle_end_time]" . $game->whistle_end_time;
-            }
-            else{
-                $message->status = "400";
-                $message->title = "Failed to add whistle end time";
-                $message->subcode = "492";
-                $message->message = "";
-                echo json_encode($message); 
-                return $message;
-            }
-
-            // update progress status. Set to 'Finished'
-            $q = mysqli_query($con, "UPDATE `progress` SET  `status` = '4' WHERE `game` = '$game->match_id'");  
-            if(!$q){
-                $message->status = "400";
-                $message->title = "Failed to update game progress";
-                $message->subcode = "493";
-                $message->message = "";
-            }
-            echo json_encode($message); 
-            return $message;
+        // update whistle_start_time
+        $q = mysqli_query($con, "UPDATE `games` SET `whistle_end_time` = '$game->whistle_end_time' WHERE `id` = '$game->match_id'");  
+        if($q){
+            $message->status = "200";
+            $message->title = "Game finished";
+            $message->message = $game->home . " v " . $game->away. " - [whistle_end_time]" . $game->whistle_end_time;
         }
         else{
-            return $retval;
+            $message->status = "400";
+            $message->title = "Failed to add whistle end time";
+            $message->subcode = "492";
+            $message->message = "";
         }
+
+        // update progress status. Set to 'Finished'
+        $q = mysqli_query($con, "UPDATE `progress` SET  `status` = '4' WHERE `game` = '$game->match_id'");  
+        if(!$q){
+            $message->status = "400";
+            $message->title = "Failed to update game progress";
+            $message->subcode = "493";
+            $message->message = "";
+        }
+        $message->message .= $retval->message; 
+        echo json_encode($message);
+        return $message; 
 
 ?>

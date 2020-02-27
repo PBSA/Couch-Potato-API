@@ -106,56 +106,62 @@ else{
 
     // send new game to BOS
     $bosval =  bos_Send($game);   
+    if($bosval->status == "200"){
+            // get the last event id
+            $q = $con->query("SELECT MAX(id) as `id` FROM events WHERE `date` = '$game->date' AND `league` = '$game->league'");
+            $row=mysqli_fetch_object($q);
+            if(!$q){
+                $message->status = "400";
+                $message->title = "Failed to get last event id";
+                $message->subcode = "471";
+                $message->message = "";
+                echo json_encode($message); 
+                return $message;
+            }
+            // if this is the first game then a new event has to be created as well
+            if($row->id == null){
+                // first game so add new event
+                $q = mysqli_query($con, "INSERT INTO `events` ( `user`, `league`, `date` ) 
+                                            VALUES ('$game->user', '$game->league', '$game->date')"); 
+                
+                if(!$q){
+                    $message->status = "400";
+                    $message->title = "Failed to add new event";
+                    $message->subcode = "472";
+                    $message->message = "";
+                    echo json_encode($message); 
+                    return $message;
+                }
 
-    // get the last event id
-    $q = $con->query("SELECT MAX(id) as `id` FROM events WHERE `date` = '$game->date' AND `league` = '$game->league'");
-    $row=mysqli_fetch_object($q);
-    if(!$q){
-        $message->status = "400";
-        $message->title = "Failed to get last event id";
-        $message->subcode = "471";
-        $message->message = "";
-        echo json_encode($message); 
-        return $message;
-    }
-    // if this is the first game then a new event has to be created as well
-    if($row->id == null){
-        // first game so add new event
-        $q = mysqli_query($con, "INSERT INTO `events` ( `user`, `league`, `date` ) 
-                                    VALUES ('$game->user', '$game->league', '$game->date')"); 
-        
-        if(!$q){
-            $message->status = "400";
-            $message->title = "Failed to add new event";
-            $message->subcode = "472";
-            $message->message = "";
-            echo json_encode($message); 
-            return $message;
-        }
-
-        // get the new event id
-        $q = $con->query("SELECT MAX(id) as `id` FROM events");
-        $row=mysqli_fetch_object($q);
-        if($q){
-            $game->eventid = $row->id ;
+                // get the new event id
+                $q = $con->query("SELECT MAX(id) as `id` FROM events");
+                $row=mysqli_fetch_object($q);
+                if($q){
+                    $game->eventid = $row->id ;
+                }
+                else{
+                    $message->status = "400";
+                    $message->title = "Failed to get new event id";
+                    $message->subcode = "473";
+                    $message->message = "";
+                    echo json_encode($message); 
+                    return $message;
+                }
+            }
+            else{
+                $game->eventid = $row->id;
+            }
+            // add game
+            $retval = addGame($game);
+            $retval->message .= $bosval->message; 
+            echo json_encode($retval);
+            return $retval; 
         }
         else{
-            $message->status = "400";
-            $message->title = "Failed to get new event id";
-            $message->subcode = "473";
-            $message->message = "";
-            echo json_encode($message); 
-            return $message;
+            echo json_encode($bosval);
+            return $bosval; 
         }
-    }
-    else{
-        $game->eventid = $row->id;
-    }
-    // add game
-    $retval = addGame($game);
-    $retval->title .= $bosval->message; 
-    echo json_encode($retval);
-    return $retval; 
+    
 
 
  function addGame($game){
