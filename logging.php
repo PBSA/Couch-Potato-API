@@ -16,11 +16,11 @@
                                     VALUES ('$url','$message', '$incident')");
     }
 
-    function log_error($msg){
+    function log_error($msg, $url){
         global $con;
         $message = json_encode($msg->message);
-        $q = mysqli_query($con,  "INSERT INTO `errorlog` ( `status`,`subcode`,`title`,`message` ) 
-                                    VALUES ('$msg->status','$msg->subcode', '$msg->title', '$message')");
+        $q = mysqli_query($con,  "INSERT INTO `errorlog` ( `status`,`subcode`,`title`,`message`, `url` ) 
+                                    VALUES ('$msg->status','$msg->subcode', '$msg->title', '$message', '$url')");
     }
 
     function log_incident($data, $url){

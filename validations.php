@@ -262,7 +262,7 @@
         global $con;
 
         if($game->call == "create"){
-            // game can't already have been created
+            /* game can't already have been created
             $q = $con->query("SELECT `id` FROM games WHERE `hometeam`= '$game->home' AND `awayteam`= '$game->away' AND `starttime`= '$game->time'");
             $row=mysqli_fetch_object($q);
             if($row != null){
@@ -270,7 +270,7 @@
                 $message->subcode = "478";
                 $message->title = "Game already exists";
                 $message->message = "A game can't be created more than once";
-            }
+            }*/
         }
         elseif($game->call == "in_progress"){
             // game can't already have started

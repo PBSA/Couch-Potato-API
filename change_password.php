@@ -7,19 +7,23 @@
 
         $postdata = file_get_contents("php://input");
         $user = json_decode($postdata,true);
+        $userid = $user['userid'];
+        $salt = $user['salt'];
+        $password = $user['password'];
+        $username = $user['username'];
         
-        $q = mysqli_query($con, "UPDATE `user` SET  `salt` = '$user->salt',`password` = '$user->password' 
-                                            WHERE `id` = '$user->id'"); 
+        $q = mysqli_query($con, "UPDATE `users` SET  `salt` = '$salt',`password` = '$password' 
+                                            WHERE `id` = '$userid'"); 
         if($q){
             $message->status = "200";
-            $message->title = "Password changed";
-            $message->message = "";   
+            $message->title = "Password successfully changed";
+            $message->message = $id . $username;   
         }
         else{
             $message->status = "400";
             $message->subcode = "447";
-            $message->title = "Failed to change password for [" . $user->username . "]";
+            $message->title = "Failed to change password for [ " . $username . "]";
             $message->message = "";
         } 
-        return $message;          
+        echo json_encode($message);         
 ?>

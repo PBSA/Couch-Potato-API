@@ -8,12 +8,14 @@ function bos_Send($game){
 
    $witnesses = $config->subscriptions->witnesses;
    $message = new stdClass();
+   $good = 0;
+
+  
   
   // send incident message to all BOS witnesses
   foreach($witnesses as $witness) {
    
     $curl = curl_init(trim($witness->url));
-    
     $incident = json_encode(make_incident($game, $config),JSON_UNESCAPED_SLASHES);
     $headers = ['Content-Type: application/json'];
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -27,32 +29,31 @@ function bos_Send($game){
         $message->subcode = "520";
         $message->title = "BOS server may not be available";
         $message->message = $info;
-        echo json_encode($message);
-        }
-        else{
-            curl_close($curl);
-            $decoded = json_decode($curl_response);
-            if($decoded == null){
+        log_error($message, $witness->url);
+    }
+    else{
+        curl_close($curl);
+        $decoded = json_decode($curl_response);
+        if($decoded == null){
                 $message->status = "400";
                 $message->title = $curl_response;
                 if($message->title == "Not normalized incident"){$message->subcode = "450";}
                 if($message->title == "Invalid data format"){$message->subcode = "451";}
                 $message->message = $incident;
-                log_error($message);
-                echo json_encode($message);
-                return $message;
+                //log_error($message, $witness->url);
+               
             }
             else{   
-                
                 log_incident(json_decode($incident), $witness->url);
                 log_success($decoded, $witness->url);
-                $message->status = "200";
-                $message->title = "Incident sent";
-                $message->message = $decoded;
-                return $message;
+                $good++;
             }
         }
     }  
+    $message->status = "200";
+    $message->title = "Incident sent";
+    $message->message = "[" . $good . " of " . count($witnesses) . "] subscribers reached";
+    return $message;
 }
 
 ?>
