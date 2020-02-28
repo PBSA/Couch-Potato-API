@@ -12,6 +12,13 @@
     $end = $_GET['end'];
 
     $message = new stdClass();
+
+   
+    $games=array(); 
+    $q = $con->query("SELECT * FROM games");
+    while ($row=mysqli_fetch_object($q)){
+        $games[]=$row; 
+    }
    
     $data=array(); 
     $q = $con->query("SELECT * FROM couch_potato.vwgameevents WHERE league = '$league' AND datetime BETWEEN '$start' AND '$end'");
@@ -19,7 +26,8 @@
     while ($row=mysqli_fetch_object($q)){
         $data[]=$row; 
     }
-    if(count($data) != 0){
+     // first game ever we can allow query to return zero records, after that it's an error.
+    if(count($data) != 0 || count($games == 0)){
         echo json_encode($data);
     }
     else{

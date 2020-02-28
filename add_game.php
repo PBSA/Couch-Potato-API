@@ -89,20 +89,6 @@ if($retval->status !=  $codes->success200){
 // ** Done validating, now do some real work **
 // ********************************************
 
-// get the next id
-$q = $con->query("SELECT MAX(id) as `id` FROM `games`");
-$row=mysqli_fetch_object($q);
-if($q){
-    $game->match_id = $row->id + 1;  
- 
-}
-else{
-    $message->status = "400";
-    $message->title = "Failed to get new game id";
-    $message->subcode = "475";
-    $message->message = "";
-    return $message;
-}
 
     // send new game to BOS
     $bosval =  bos_Send($game);   
@@ -179,9 +165,25 @@ else{
         $message->message = "";
         return $message;
     } 
+
+    // get the next id
+    $q = $con->query("SELECT MAX(id) as `id` FROM `games`");
+    $row=mysqli_fetch_object($q);
+    if($q){
+        $game->match_id = $row->id ;  
+    
+    }
+    else{
+        $message->status = "400";
+        $message->title = "Failed to get new game id";
+        $message->subcode = "475";
+        $message->message = "";
+        return $message;
+    }
+
     
     // insert the game progress. Set to 'Not Started'
-    // if this is the very record then need to do an Insert
+   
     $q = $con->query("SELECT `status` FROM `progress` WHERE `game` = '$game->match_id'");  
     $row=mysqli_fetch_object($q);
     if($row != null)

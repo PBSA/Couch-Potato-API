@@ -1,6 +1,7 @@
 <?php
     function bos_Send($game){
-        // send a create incident to BOS
+
+    // send incidents/triggers to BOS
     
     include "incidents.php";
     include "logging.php";

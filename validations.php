@@ -148,18 +148,23 @@
         global $message;
         global $codes;
 
+        $data=array();
+
         // get all leagues for selected sport and check for match
         $q = $con->query("SELECT `leaguename` FROM couch_potato.vwsports WHERE `sportsname`= '$sport'");
         while ($row=mysqli_fetch_object($q)){
             $data[]=$row->leaguename; 
         }
         if(array_search($league, $data) === false){
+           
             $message->status = $codes->error400;
             $message->subcode = "461";
             $message->title = "Invalid league [" . $league . "]";
             $message->message = "Try one of: " . json_encode($data);
         }
-        else{ $message->status = $codes->success200; }
+        else{ 
+            $message->status = $codes->success200; 
+        }
         return $message;
     }
 
@@ -167,6 +172,8 @@
         global $con;
         global $message;
         global $codes;
+
+        $data=array();
 
         // get all teams for selected league and check for match
         $q = $con->query("SELECT `teamname` FROM couch_potato.vwteams WHERE `leaguename`= '$league'");
@@ -189,7 +196,6 @@
     function validateDateTime($datetime){
         global $message;
         global $codes;
-
     }
 
     function validateBothTeams($home, $away){
