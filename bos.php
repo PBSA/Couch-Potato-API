@@ -22,6 +22,7 @@
         curl_setopt($curl, CURLOPT_POSTFIELDS, $incident);
         curl_setopt($curl,CURLOPT_RETURNTRANSFER,1);
         $curl_response = curl_exec($curl);
+      
         if ($curl_response === false) {
             $info = curl_getinfo($curl);
             curl_close($curl);
@@ -36,6 +37,7 @@
             curl_close($curl);
             $decoded = json_decode($curl_response);
             if($decoded == null){
+                     echo $curl_response;
                     $errors->status = "400";
                     $errors->title = $curl_response;
                     if($errors->title == "Not normalized incident"){
@@ -49,6 +51,7 @@
                     else{
                         $errors->title = "Internal server error";
                         $errors->subcode = "452";
+                        
                     }
                     $errors->message = $incident;
                     log_error($errors, $witness->url);

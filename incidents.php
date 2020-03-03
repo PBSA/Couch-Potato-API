@@ -1,7 +1,9 @@
 <?php
 
     function make_incident($game, $config){
-        $timestamp = gmdate("Y-m-d") . 'T' . gmdate("H:i:s") . '.000Z';        
+        $now = gmdate("Y-m-d") . 'T' . gmdate("H:i:s");
+        $timestamp = $now . 'Z';      
+        $pushed = $now . '.000Z';    
         $unique_string = unique_string($game->start_time, $game);      
         $incident = new stdClass();
         $incident->call = $game->call;
@@ -32,26 +34,27 @@
         $id->event_group_name = $game->league;
 
         $provider_info = new stdClass();
-        $provider_info->match_id = $game->match_id;
+        //$provider_info->match_id = $game->match_id;
         
         $provider_info->name = $config->providers->name;
-        $provider_info->source = 'direct string input';
-        $provider_info->source_file = '';
-        $provider_info->pushed = $timestamp;
+        //$provider_info->source = 'direct string input';
+        //$provider_info->source_file = '';
+        $provider_info->pushed = $pushed;
 
         $incident->arguments = $arguments;
         $incident->id = $id;
         $incident->provider_info = $provider_info;
-        //echo json_encode($incident);
         return $incident;
     }
 
     function unique_string($starttime, $game){
         // create a unique incident identifier
-        $uniquestring = $starttime . '__';
-        $uniquestring .= format_text($game->sport) . "__" . format_text($game->league) . "__";
-        $uniquestring .= format_text($game->home) . "__" . format_text($game->away) . "__";
+        $uniquestring = str_replace(':', '', $starttime);
+        $uniquestring .= '__';
+        $uniquestring .= $game->sport . "__" . $game->league . "__";
+        $uniquestring .= $game->home . "__" . $game->away . "__";
         $uniquestring .= $game->call . '__20192020';
+        $uniquestring = str_replace(' ', '-', $uniquestring);
         return strtolower($uniquestring);
     }
     

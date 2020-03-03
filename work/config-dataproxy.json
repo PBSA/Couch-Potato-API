@@ -14,7 +14,7 @@
                     "group": "elizabethchain"
                 },
                 {
-                    "url": "http://35.183.41.242:8010/trigger",
+                    "url": "https://bdataproxy.bookie.host/trigger",
                     "group": "beatricechain"
                 }
             ]

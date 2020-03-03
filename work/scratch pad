@@ -1,0 +1,15 @@
+{"create":{
+    "incidents":[{"arguments":{"season":"2019/2020"},"provider_info":{"name":"7903ac4b2b8c6486f2a56c7313e4d80b",
+    "pushed":"2020-03-02T19:41:28.617Z"},"timestamp":"2020-03-02T20:01:44Z",
+    "unique_string":"2020-03-04t020000z__basketball__nba-regular-season__phoenix-suns__toronto-raptors__create__20192020"}],
+    "status":{"actions":[],"name":"done","proposals":[]}},"id":{"away":"Toronto Raptors","event_group_name":"NBA Regular Season","home":"Phoenix Suns",
+    "sport":"Basketball","start_time":"2020-03-04T02:00:00Z"},
+    "id_string":"2020-03-04t020000z__basketball__nba-regular-season__phoenix-suns__toronto-raptors"}
+
+{"create":{
+    "incidents":[{"arguments":{"season":"2019/2020"},"provider_info":{"name":"couch_potato",
+    "pushed":"2020-03-03T17:24:46.000Z"},"timestamp":"2020-03-03T17:24:46Z",
+    "unique_string":"2020-03-04t020000z__basketball__nba-regular-season__phoenix-suns__toronto-raptors__create__20192020"}],
+    "status":{"name":"insufficient incidents"}},"id":{"away":"Toronto Raptors","event_group_name":"NBA Regular Season","home":"Phoenix Suns",
+    "sport":"Basketball","start_time":"2020-03-04T02:00:00Z"},
+    "id_string":"2020-03-04t020000z__basketball__nba-regular-season__phoenix-suns__toronto-raptors"}
