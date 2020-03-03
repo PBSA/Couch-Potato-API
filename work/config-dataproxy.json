@@ -12,6 +12,10 @@
                 {
                     "url": "http://35.183.41.242:8010/trigger",
                     "group": "elizabethchain"
+                },
+                {
+                    "url": "http://35.183.41.242:8010/trigger",
+                    "group": "beatricechain"
                 }
             ]
         },

@@ -36,47 +36,42 @@
             curl_close($curl);
             $decoded = json_decode($curl_response);
             if($decoded == null){
-                    $message->status = "400";
-                    $message->title = $curl_response;
-                    if($message->title == "Not normalized incident"){
+                    $errors->status = "400";
+                    $errors->title = $curl_response;
+                    if($errors->title == "Not normalized incident"){
                         // if this fails for one BOS node it will fail for all
-                        $message->subcode = "450"; 
-                        $errors->subcode = $message->subcode;
-                        $errors->title = $message->title;
+                        $errors->subcode = "450";
                     }
-                    elseif($message->title == "Invalid data format"){
+                    elseif($errors->title == "Invalid data format"){
                         // if this fails for one BOS node it will fail for all
-                        $message->subcode = "451"; 
-                        $errors->subcode = $message->subcode;
-                        $errors->title = $message->title;
+                        $errors->subcode = "451"; 
                     }
                     else{
-                        $message->title = "Internal server error";
-                        $message->subcode = "452";
+                        $errors->title = "Internal server error";
+                        $errors->subcode = "452";
                     }
-                    $errors->status = $message->status;
                     $errors->message = $incident;
-                    log_error($message, $witness->url);
-                }
-                else{   
-                    log_incident(json_decode($incident), $witness->url);
-                    log_success($decoded, $witness->url);
-                    $good++;
-                }
+                    log_error($errors, $witness->url);
             }
-        }  
-        if($good > 0)
-        {
-            // at least one end point was reached
-            $message->status = "200";
-            $message->message = "[" . $good . " of " . count($witnesses) . "] subscribers reached";
-            return $message;
+            else{   
+                log_incident(json_decode($incident), $witness->url);
+                log_success($decoded, $witness->url);
+                $good++;
+            }
         }
-        else
-        {
-            // could have failed for various reasons, most likely not normalized or bad format
-            return $errors;
-        }
+    }  
+    if($good > 0)
+    {
+        // at least one end point was reached
+        $message->status = "200";
+        $message->message = "[" . $good . " of " . count($witnesses) . " subscribers reached]";
+        return $message;
     }
+    else
+    {
+        // could have failed for various reasons, most likely not normalized or bad format
+        return $errors;
+    }
+}
 
 ?>
