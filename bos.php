@@ -37,7 +37,6 @@
             curl_close($curl);
             $decoded = json_decode($curl_response);
             if($decoded == null){
-                     echo $curl_response;
                     $errors->status = "400";
                     $errors->title = $curl_response;
                     if($errors->title == "Not normalized incident"){

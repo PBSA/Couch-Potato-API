@@ -4,11 +4,7 @@
     "subscriptions":
         {
             "witnesses":
-            [
-                {
-                    "url": "http://ec2-35-183-16-213.ca-central-1.compute.amazonaws.com:8010/trigger",
-                    "group": "herculeschain"
-                },
+            [  
                 {
                     "url": "http://35.183.41.242:8010/trigger",
                     "group": "elizabethchain"

@@ -35,11 +35,11 @@
             $message['status'] = "error";
         }
     
-        /* save incident to dump file as well.
+        //save incident to dump file as well.
         $myfile = fopen("dump/" . $data->unique_string . ".json", "w") or die("Unable to create file!");
         fwrite($myfile, $json);
         fclose($myfile);    
-        echo mysqli_error($con); */
+        echo mysqli_error($con); 
     }
 
 ?>

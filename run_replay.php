@@ -95,7 +95,6 @@ function send_message($incident){
             else{ 
                 log_incident(json_decode($incident), $witness->url);
                 log_success($decoded, $witness->url);
-                //echo json_encode($decoded);
             }
         }
     }
