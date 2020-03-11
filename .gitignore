@@ -1,2 +1,4 @@
+.env
+composer.lock
 .DS_Store
 dump/
