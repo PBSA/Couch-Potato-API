@@ -36,9 +36,9 @@
         }
     
         //save incident to dump file as well.
-        $myfile = fopen("dump/" . $data->unique_string . ".json", "w") or die("Unable to create file!");
-        fwrite($myfile, $msg);
-        fclose($myfile);    
+        //$myfile = fopen("dump/" . $data->unique_string . ".json", "w") or die("Unable to create file!");
+        //fwrite($myfile, $msg);
+        //fclose($myfile);    
         echo mysqli_error($con); 
     }
 
