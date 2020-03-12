@@ -1,0 +1,11 @@
+stages:
+  - deploy
+
+deployToDev:
+  stage: deploy
+  script:
+    - deployAPI
+  only:
+    - develop
+  tags:
+    - cp-dev
