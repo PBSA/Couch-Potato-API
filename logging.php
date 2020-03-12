@@ -1,6 +1,6 @@
 <?php
 
-    include "db.php";
+    //include "db.php";
 
     function log_success($msg, $url){
         global $con;

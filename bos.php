@@ -7,6 +7,7 @@
     include "logging.php";
     include "get_config.php";
 
+
     $witnesses = $config->subscriptions->witnesses;
     $message = new stdClass();
     $errors = new stdClass();
