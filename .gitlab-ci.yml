@@ -4,7 +4,7 @@ stages:
 deployToDev:
   stage: deploy
   script:
-    - cp -R /* /var/www/Couch-Potato
+    - cp -R ./* /var/www/Couch-Potato
     - deployAPI
   only:
     - develop
