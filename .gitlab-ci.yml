@@ -1,0 +1,12 @@
+stages:
+  - deploy
+
+deployToDev:
+  stage: deploy
+  script:
+    - cp -R ./* /var/www/Couch-Potato
+    - deployAPI
+  only:
+    - develop
+  tags:
+    - cp-dev
