@@ -7,15 +7,13 @@
     include "logging.php";
     include "get_config.php";
 
-
     $witnesses = $config->subscriptions->witnesses;
     $message = new stdClass();
     $errors = new stdClass();
     $good = 0;
-    
+   
     // send incident message to all BOS witnesses
     foreach($witnesses as $witness) {
-    
         $curl = curl_init(trim($witness->url));
         $incident = json_encode(make_incident($game, $config),JSON_UNESCAPED_SLASHES);
         $headers = ['Content-Type: application/json'];
@@ -23,11 +21,9 @@
         curl_setopt($curl, CURLOPT_POSTFIELDS, $incident);
         curl_setopt($curl,CURLOPT_RETURNTRANSFER,1);
         $curl_response = curl_exec($curl);
-      
         if ($curl_response === false) {
             $info = curl_getinfo($curl);
             curl_close($curl);
-        
             $message->status = "520";
             $message->subcode = "520";
             $message->title = "BOS server may not be available";
@@ -51,7 +47,6 @@
                     else{
                         $errors->title = "Internal server error";
                         $errors->subcode = "452";
-                        
                     }
                     $errors->message = $incident;
                     log_error($errors, $witness->url);

@@ -1,6 +1,7 @@
 <?php
 
     function make_incident($game, $config){
+
         $now = gmdate("Y-m-d") . 'T' . gmdate("H:i:s");
         $timestamp = $now . 'Z';      
         $pushed = $now . '.000Z';    
@@ -13,7 +14,7 @@
         // arguments change according to the call type.
         $arguments = new stdClass();
         if($game->call == 'create'){
-            $arguments->season = '2019/2020';
+            $arguments->season = '2019-2020';
         }
         elseif($game->call == 'in_progress'){
             $arguments->whistle_start_time = $game->whistle_start_time;
@@ -44,6 +45,7 @@
         $incident->arguments = $arguments;
         $incident->id = $id;
         $incident->provider_info = $provider_info;
+    
         return $incident;
     }
 

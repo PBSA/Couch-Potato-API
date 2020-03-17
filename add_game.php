@@ -89,7 +89,7 @@ if($retval->status !=  $codes->success200){
 // ********************************************
 
         // send new game to BOS
-        $bosval =  bos_Send($game);   
+        $bosval =  bos_Send($game);  
         if($bosval->status == "200"){
             $message->status = "200";
             $message->title = "Game added ";
