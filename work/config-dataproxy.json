@@ -1,6 +1,6 @@
 
 {
-    "name": "couch_potato",
+    "name": "brussel sprout",
     "subscriptions":
         {
             "witnesses":
@@ -8,13 +8,41 @@
                 {
                     "url": "http://ec2-35-183-34-135.ca-central-1.compute.amazonaws.com:8010/trigger",
                     "group": "herculeschain"
+                },
+                {
+                    "url": "http://bmint.bookie.host/trigger",
+                    "group": "beatricechain"
+                },
+
+                {
+                    "url": "https://beatrice-bos-sj7smflasyfg.blckchnd.com/trigger",
+                    "group": "blckchndbeatricechain"
+                },
+                
+                {
+                    "url": "https://ptb.blockveritas.co/ptb/trigger",
+                    "group": "taconatorbeatricechain"
+                },
+                
+                {
+                    "url": "http://beatrice-bos.spacemx.tech:8010/trigger",
+                    "group": "spacecryptbeatricechain"
+                },
+                
+                {
+                    "url": "https://bos-beatrice01.eifos.org/trigger",
+                    "group": "eifosbeatricechain"
+                },
+                
+                {
+                    "url": "http://159.69.223.206:8010/trigger",
+                    "group": "alexpubeatricechain"
                 }
-               
             ]
         },
     "providers": 
         {
-            "name": "couch_potato",
+            "name": "brussel sprout",
             "user": "",
             "password": ""
         }  
