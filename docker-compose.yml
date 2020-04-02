@@ -1,0 +1,30 @@
+# ./docker-compose.yml
+
+version: '3.7'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./schema:/docker-entrypoint-initdb.d
+    #image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: couch_potato
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    ports:
+      - "9906:3306"
+  web:
+    build:
+      context: ./docker
+      dockerfile: web.Dockerfile
+    container_name: php_web
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www/html/
+    ports:
+      - "8100:80"
+    stdin_open: true
+    tty: true
